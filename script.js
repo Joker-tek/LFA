@@ -64,14 +64,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   .map(([h,t])=>'<a href="'+h+'"'+(cur===h?' aria-current="page"':'')+'>'+t+(h==='likeok.html'&&n?' <span class="dot">'+n+'</span>':'')+'</a>').join('')+'<a class="btn" href="belepes.html">Belépés</a>'}
  /* reklámhelyek */
  const ad='<div class="ad"><div><b>Hirdetés</b>Itt lehet a te reklámod</div></div>';
- document.body.insertAdjacentHTML('beforeend','<aside class="ad-rail l" aria-label="Hirdetés">'+ad+'</aside><aside class="ad-rail r" aria-label="Hirdetés">'+ad+'</aside><div id="glow"></div><svg class="scroll-thread" viewBox="0 0 36 1000" preserveAspectRatio="none" aria-hidden="true"><path id="tbase" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="2" vector-effect="non-scaling-stroke"/><path id="tpath" fill="none" stroke="#FF2D55" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><div id="tdot"></div>');
+ document.body.insertAdjacentHTML('beforeend','<aside class="ad-rail l" aria-label="Hirdetés">'+ad+'</aside><aside class="ad-rail r" aria-label="Hirdetés">'+ad+'</aside><div id="glow"></div><div id="thr"><svg id="tsvg" aria-hidden="true"><path id="tbase" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="2"/><path id="tpath" fill="none" stroke="#FF2D55" stroke-width="5" stroke-linecap="round"/></svg><div id="tdot"></div></div>');
  const w=document.querySelector('.wrap');if(w)w.insertAdjacentHTML('beforeend','<div class="ad ad-bar"><div><b>Hirdetés</b>Itt lehet a te reklámod</div></div>');
- /* mozgó vörös fonal görgetésre */
- let d='M18 0';for(let y=0;y<1000;y+=125){const s=(y/125)%2?-1:1;d+=' C '+(18+s*14)+' '+(y+40)+', '+(18-s*14)+' '+(y+85)+', 18 '+(y+125)}
- const p=document.getElementById('tpath'),base=document.getElementById('tbase'),dot=document.getElementById('tdot');
- p.setAttribute('d',d);base.setAttribute('d',d);const L=p.getTotalLength();p.style.strokeDasharray=L;
- let tick=false;const upd=()=>{tick=false;const m=document.documentElement.scrollHeight-innerHeight;const k=m>0?Math.min(1,Math.max(0,scrollY/m)):0;
-  p.style.strokeDashoffset=L*(1-k);const pt=p.getPointAtLength(Math.max(.1,L*k));dot.style.transform='translate('+(4+pt.x)+'px,'+Math.min(innerHeight-12,Math.max(12,pt.y*innerHeight/1000))+'px)'};
- addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});addEventListener('resize',upd);upd();
+ /* vörös fonal: az oldal teljes hosszában fut, a vége pontosan a görgetést követi */
+ const docH=()=>Math.max(w?w.offsetTop+w.offsetHeight:0,innerHeight);
+ const thr=document.getElementById('thr'),svg=document.getElementById('tsvg'),p=document.getElementById('tpath'),base=document.getElementById('tbase'),dot=document.getElementById('tdot');
+ let H=0,L=1;
+ function build(h){H=h;thr.style.height=h+'px';svg.setAttribute('width',36);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 36 '+h);
+  let d='M18 0';for(let y=0;y<h;y+=160){const s=(y/160)%2?-1:1;d+=' C '+(18+s*14)+' '+(y+50)+', '+(18-s*14)+' '+(y+110)+', 18 '+(y+160)}
+  p.setAttribute('d',d);base.setAttribute('d',d);L=p.getTotalLength();p.style.strokeDasharray=L}
+ let tick=false;
+ const upd=()=>{tick=false;const h=docH();if(Math.abs(h-H)>2)build(h);
+  const m=h-innerHeight,k=m>0?Math.min(1,Math.max(0,scrollY/m)):0,tip=scrollY+innerHeight*(.2+.6*k),f=Math.min(1,Math.max(0,tip/h));
+  p.style.strokeDashoffset=L*(1-f);const pt=p.getPointAtLength(Math.max(.1,L*f));dot.style.transform='translate('+(4+pt.x)+'px,'+pt.y+'px)'};
+ addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});addEventListener('resize',upd);addEventListener('load',upd);upd();
  const g=document.getElementById('glow');addEventListener('pointermove',e=>{g.style.transform='translate('+(e.clientX-250)+'px,'+(e.clientY-250)+'px)'},{passive:true});
 });

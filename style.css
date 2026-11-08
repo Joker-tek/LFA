@@ -186,3 +186,14 @@ nav a[aria-current=page]{color:var(--ink);border-bottom:2px solid var(--red2)}
 .sw .pic{font-size:16rem}
 .vote{margin:14px 0 4px}
 @media(max-width:700px){.deck{height:clamp(480px,calc(100vh - 200px),760px)}.sw h2{font-size:2.2rem}}
+
+/* ===== 5. kör: telefon-arányú kártya, oldalhosszú fonal ===== */
+#thr{position:absolute;left:0;top:0;width:44px;pointer-events:none;z-index:6;color:var(--ink)}
+#tsvg{position:absolute;left:4px;top:0;overflow:visible}
+#tdot{position:absolute;left:0;top:0}
+#tpath{filter:drop-shadow(0 0 6px #FF2D55)}
+.deck{width:min(94vw,460px,calc((100vh - 150px)*.58));height:min(calc(100vh - 150px),900px);min-height:480px;margin:6px auto}
+.sw h2{font-size:2.4rem}
+.sw .pic{font-size:13rem}
+.sw .info{padding:90px 22px 24px}
+.sw .info p{font-size:1rem}
