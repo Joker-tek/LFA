@@ -1,40 +1,49 @@
-<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profil – Sorsfonál</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="script.js"></script></head><body><div class="wrap"><header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="index.html#ismerkedes">Ismerkedés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profil – Sorsfonál</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
 <main class="card wide">
-<div class="avatar" id="av">?</div>
+<img class="photo" id="ph" alt="Profilkép"><div class="avatar" id="av">?</div>
+<p><label class="btn ghost" for="file" style="margin:0;cursor:pointer" data-fx="">Profilkép feltöltése</label><input id="file" type="file" accept="image/*" hidden></p>
 <h1>Profilod <span class="badge" id="pb" hidden>Prémium</span></h1>
-<p class="muted">Minél többet kitöltesz, annál jobb embereket mutatunk.</p>
-<div class="two"><div><label for="nev">Becenév</label><input id="nev"></div><div><label for="kor">Korod</label><input id="kor" type="number" min="18" max="99"></div></div>
-<label for="varos">Város</label><input id="varos">
-<label for="bio">Rólad</label><textarea id="bio" placeholder="Pár mondat arról, ki vagy és mit szeretsz csinálni."></textarea>
-<fieldset><legend>Mit szeretsz csinálni?</legend><div class="checks" id="ints"></div></fieldset>
-<fieldset><legend>Milyen zenéket szeretsz?</legend><div class="checks" id="gen"></div></fieldset>
-<label for="eloado">Kedvenc előadók</label><input id="eloado" placeholder="Vesszővel elválasztva">
-<label for="cel">Mit keresel?</label>
-<select id="cel"><option>Komoly kapcsolatot</option><option>Ismerkedést</option><option>Barátságot</option><option>Még nem tudom</option></select>
-<h2 class="sec">Beállítások</h2>
-<fieldset><legend>Megjelenés</legend><div class="checks" id="th"></div></fieldset>
-<div class="two"><div><label for="min">Legkisebb kor, akit látni akarsz</label><input id="min" type="number" min="18" max="99"></div><div><label for="max">Legnagyobb kor</label><input id="max" type="number" min="18" max="99"></div></div>
-<label class="switch"><input type="checkbox" id="hide">Ne mutassa a távolságot a kártyákon</label>
-<label class="switch"><input type="checkbox" id="notif">Értesítést kérek új egyezésről</label>
-<p style="margin-top:20px"><button class="btn" id="save">Mentés</button></p><p class="msg" id="msg" role="status"></p>
-<p class="muted" style="margin-top:12px">A tárolás most a saját böngésződben történik, nem küldjük el sehova.</p>
+<p class="muted">Mesélj magadról mindent, amit szeretnél. Mindent átlátsz, semmi sem kötelező.</p>
+<div class="pbar"><i id="bar"></i></div><p class="muted" id="pct" style="font-size:.9rem"></p>
+<div id="form"></div>
+<div class="savebar"><button class="btn" id="save">Mentés</button><span class="msg" id="msg" role="status" style="margin:0"></span></div>
+<p class="muted" style="margin-top:12px">A profil most a saját böngésződben tárolódik, nem küldjük el sehova. A beállításokat (téma, hang, szűrők) a Beállítások oldalon találod.</p>
 </main></div>
 <script>
-const p=load('sf_profile',{}),s=load('sf_set',{theme:'dark'});
-const el=id=>document.getElementById(id);
-const chk=(box,list,sel,name)=>{el(box).innerHTML=list.map(x=>'<label><input type="checkbox" name="'+name+'" value="'+x+'"'+(sel.includes(x)?' checked':'')+'>'+x+'</label>').join('')};
-chk('ints',INTERESTS,p.interests||[],'i');chk('gen',GENRES,p.genres||[],'g');
-const TH=[['dark','Sötét'],['light','Világos'],['auto','Rendszer szerint']];
-el('th').innerHTML=TH.map(t=>'<label><input type="radio" name="th" value="'+t[0]+'"'+((s.theme||'dark')===t[0]?' checked':'')+'>'+t[1]+'</label>').join('');
-document.querySelectorAll('[name=th]').forEach(r=>r.onchange=()=>{s.theme=r.value;save('sf_set',s);applyTheme()});
-el('nev').value=p.nev||'';el('kor').value=p.kor||'';el('varos').value=p.varos||'';el('bio').value=p.bio||'';el('eloado').value=p.eloado||'';el('cel').value=p.cel||'Komoly kapcsolatot';
-el('min').value=s.min||18;el('max').value=s.max||99;el('hide').checked=!!s.hideDist;el('notif').checked=!!s.notif;
-const ini=()=>{el('av').textContent=(el('nev').value||'?')[0].toUpperCase()};ini();el('nev').oninput=ini;
-el('pb').hidden=!load('sf_premium',false);
-const vals=n=>[...document.querySelectorAll('[name='+n+']:checked')].map(c=>c.value);
-el('save').onclick=()=>{
- save('sf_profile',{nev:el('nev').value,kor:el('kor').value,varos:el('varos').value,bio:el('bio').value,eloado:el('eloado').value,cel:el('cel').value,interests:vals('i'),genres:vals('g')});
- s.min=+el('min').value||18;s.max=+el('max').value||99;s.hideDist=el('hide').checked;s.notif=el('notif').checked;save('sf_set',s);
- el('msg').innerHTML='Mentve. <a href="index.html#ismerkedes">Irány az ismerkedés</a>';
-};
+const HOBBIK=['utazás','zene','sport','film','főzés','természet','könyvek','humor','fotózás','játékok','túrázás','tánc','festés','kerékpár','futás','edzőterem','jóga','horgászat','kertészkedés','társasjátékok','kávézás','koncertek','önkénteskedés','autók','technika','divat','állatok','írás'];
+const ZENE=['pop','rock','hip-hop','elektronikus','jazz','klasszikus','népzene','metál','blues','country','reggae','R&B','indie','latin'];
+const SEC=[
+['Alapok',[['nev','Becenév','t'],['kor','Korod','n'],['nem','Nem','s',['Nő','Férfi','Nem bináris','Egyéb']],['varos','Város','t'],['magassag','Magasság (cm)','n'],['csillagjegy','Csillagjegy','s',['Kos','Bika','Ikrek','Rák','Oroszlán','Szűz','Mérleg','Skorpió','Nyilas','Bak','Vízöntő','Halak']],['nyelvek','Beszélt nyelvek','c',['magyar','román','angol','német','francia','spanyol','olasz','orosz']]]],
+['Mit keresek',[['keresem','Mit keresel?','s',['Komoly kapcsolatot','Ismerkedést','Barátságot','Még nem tudom']],['kit','Kit szeretnél megismerni?','s',['Nőket','Férfiakat','Mindenkit']],['tulaj','Mi a fontos a másikban?','c',['humor','őszinteség','kedvesség','ambíció','nyugalom','kalandvágy','családszeretet','műveltség','sportosság','kreativitás','megbízhatóság','önállóság']],['kizaro','Ami nálam kizáró ok','a']]],
+['Munka és tanulás',[['foglalkozas','Foglalkozás','t'],['munkahely','Hol dolgozol vagy tanulsz?','t'],['vegzettseg','Végzettség','s',['Általános iskola','Középiskola','Szakképzés','Egyetem (alapképzés)','Mesterképzés','Doktori','Egyéb']]]],
+['Életmód',[['dohany','Dohányzás','s',['Nem dohányzom','Alkalmanként','Rendszeresen']],['alkohol','Alkohol','s',['Nem iszom','Ritkán','Társaságban','Gyakran']],['edzes','Mozgás','s',['Ritkán','Hetente 1-2 alkalom','Hetente 3 vagy több','Naponta']],['alvas','Alvás','s',['Korán kelő','Éjszakai bagoly','Vegyes']],['gyerek','Gyerekek','s',['Nincs és nem is akarok','Nincs, de szeretnék','Van','Van és még szeretnék','Nyitott vagyok rá']],['lakas','Lakhatás','s',['Egyedül lakom','Szülőkkel','Lakótársakkal','Saját otthonban']],['jarmu','Közlekedés','s',['Autó','Kerékpár','Tömegközlekedés','Mindegyik']],['vallas','Vallás (nem kötelező)','s',['Nem vagyok vallásos','Keresztény','Más vallású','Spirituális','Inkább nem mondom meg']],['kisallat','Háziállat','c',['kutya','macska','nyúl','madár','nincs, de szeretnék','nincs']]]],
+['Evés és ivás',[['etrend','Étrend','s',['Mindenevő','Vegetáriánus','Vegán','Pescetáriánus','Egyéb']],['foz','Főzés','s',['Nem főzök','Egyszerű ételeket','Szeretek főzni','Profi vagyok']],['kedvenc_etel','Kedvenc étel','t'],['edesseg','Kedvenc édesség','t'],['konyha','Kedvenc konyhák','c',['magyar','olasz','ázsiai','mexikói','indiai','görög','török','grill','tengeri']],['ital','Kedvenc italok','c',['kávé','tea','bor','sör','koktél','limonádé','víz','pálinka']]]],
+['Érdeklődés',[['hobbik','Mit szeretsz csinálni?','c',HOBBIK],['zene','Milyen zenéket szeretsz?','c',ZENE],['eloadok','Kedvenc előadók','t'],['filmek','Kedvenc filmek és sorozatok','t'],['konyvek','Kedvenc könyvek','t'],['sportok','Sportok, amiket űzöl vagy követsz','t'],['alomuti','Álomutazás','t']]],
+['Személyiség',[['szemelyiseg','Inkább...','s',['Introvertált vagyok','Extrovertált vagyok','Mindkettő']],['szeretet','Szeretetnyelv','s',['Kedves szavak','Együtt töltött idő','Ajándékozás','Segítség, szívesség','Érintés']],['idojaras','Kedvenc évszak','s',['Tavasz','Nyár','Ősz','Tél']],['humor','Humorom','c',['szarkasztikus','szójátékos','fekete humor','helyzetkomikum','önironikus','kedves']],['hetvege','Hétvégén szívesen...','c',['otthon pihenek','kirándulok','bulizok','utazom','családdal vagyok','sportolok','alkotok']]]],
+['Rólad bővebben',[['bio','Pár mondat rólad','a'],['erdekesseg','Egy dolog, amit kevesen tudnak rólam','t'],['vasarnap','A tökéletes vasárnapom','a'],['elsorandi','Az ideális első randim','a'],['alom','Hol látod magad öt év múlva?','a']]]];
+const el=id=>document.getElementById(id),p=load('sf_profile',{});
+const ALL=SEC.flatMap(s=>s[1]);
+el('form').innerHTML=SEC.map(([t,fs])=>'<h2 class="sec">'+t+'</h2><div class="fields">'+fs.map(([k,l,ty,o])=>{
+ const v=p[k];let h;
+ if(ty==='t')h='<input id="f_'+k+'" value="'+esc(v||'')+'">';
+ else if(ty==='n')h='<input id="f_'+k+'" type="number" value="'+esc(v||'')+'">';
+ else if(ty==='a')h='<textarea id="f_'+k+'">'+esc(v||'')+'</textarea>';
+ else if(ty==='s')h='<select id="f_'+k+'"><option value="">–</option>'+o.map(x=>'<option'+(v===x?' selected':'')+'>'+x+'</option>').join('')+'</select>';
+ else h='<div class="checks" id="f_'+k+'">'+o.map(x=>'<label><input type="checkbox" value="'+x+'"'+((v||[]).includes(x)?' checked':'')+'>'+x+'</label>').join('')+'</div>';
+ const full=ty==='c'||ty==='a';
+ return '<div class="'+(full?'full':'')+'">'+(ty==='c'?'<legend>'+l+'</legend>':'<label for="f_'+k+'">'+l+'</label>')+h+'</div>'}).join('')+'</div>').join('');
+function read(){const o={};ALL.forEach(([k,l,ty])=>{const e=el('f_'+k);o[k]=ty==='c'?[...e.querySelectorAll('input:checked')].map(c=>c.value):e.value.trim()});return o}
+function meter(){const o=read(),n=ALL.filter(([k])=>Array.isArray(o[k])?o[k].length:o[k]).length,pc=Math.round(n/ALL.length*100);el('bar').style.width=pc+'%';el('pct').textContent='Profil kitöltöttsége: '+pc+'%'}
+function ini(){el('av').textContent=(el('f_nev').value||'?')[0].toUpperCase()}
+el('form').addEventListener('input',()=>{meter();ini()});meter();ini();
+el('pb').hidden=!prem();
+function showPhoto(){const d=load('sf_photo',null);if(d){el('ph').src=d;el('ph').style.display='block';el('av').style.display='none'}}showPhoto();
+el('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),m=480,k=Math.min(1,m/Math.max(im.width,im.height));c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);save('sf_photo',c.toDataURL('image/jpeg',.8));showPhoto()};im.src=r.result};r.readAsDataURL(f)};
+el('save').onclick=()=>{save('sf_profile',read());el('msg').innerHTML='Mentve. <a href="index.html">Irány az ismerkedés</a>'};
 </script></body></html>

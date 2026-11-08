@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beállítások – Sorsfonál</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
+<main class="card wide set">
+<h1>Beállítások</h1>
+<h2 class="sec">Megjelenés</h2>
+<div class="checks" id="th"></div>
+<h2 class="sec">Hang és effektek</h2>
+<label class="switch"><span>Gombhangok</span><input type="checkbox" id="sound"></label>
+<div class="row"><span>Hangerő</span><input type="range" id="vol" min="0" max="100"></div>
+<label class="switch"><span>Szív és szikra effektek gombnyomásra</span><input type="checkbox" id="fx"></label>
+<h2 class="sec">Kit mutassunk?</h2>
+<div class="row"><span>Kit szeretnél látni?</span><select id="show" style="width:200px"><option value="all">Mindenkit</option><option value="f">Nőket</option><option value="m">Férfiakat</option></select></div>
+<div class="two"><div><label for="min">Legkisebb kor</label><input id="min" type="number" min="18" max="99"></div><div><label for="max">Legnagyobb kor</label><input id="max" type="number" min="18" max="99"></div></div>
+<div class="row"><span>Legnagyobb távolság: <b id="kmv"></b> km</span><input type="range" id="km" min="5" max="200" step="5"></div>
+<h2 class="sec">Adatvédelem</h2>
+<label class="switch"><span>Ne mutassa a távolságot a kártyámon</span><input type="checkbox" id="hide"></label>
+<div class="row"><span>Ki láthatja a profilomat?</span><select id="vis" style="width:200px"><option value="all">Mindenki</option><option value="liked">Csak akit lájkoltam</option></select></div>
+<h2 class="sec">Értesítések</h2>
+<label class="switch"><span>Új egyezés</span><input type="checkbox" id="nm"></label>
+<label class="switch"><span>Új lájk</span><input type="checkbox" id="nl"></label>
+<label class="switch"><span>Hírek és ajánlatok</span><input type="checkbox" id="nn"></label>
+<h2 class="sec">Fiók</h2>
+<p><button class="btn ghost" id="reset" data-fx="1">Ismerkedés újraindítása</button> <button class="btn ghost danger" id="wipe" data-fx="1">Minden adatom törlése</button></p>
+<div class="savebar"><button class="btn" id="save">Mentés</button><span class="msg" id="msg" role="status" style="margin:0"></span></div>
+<p class="muted" style="margin-top:12px">A beállítások most a saját böngésződben tárolódnak, nem küldjük el sehova.</p>
+</main></div>
+<script>
+const el=id=>document.getElementById(id),s=SET();
+const TH=[['dark','Sötét'],['light','Világos'],['auto','Rendszer szerint']];
+el('th').innerHTML=TH.map(t=>'<label><input type="radio" name="th" value="'+t[0]+'"'+((s.theme||'dark')===t[0]?' checked':'')+'>'+t[1]+'</label>').join('');
+document.querySelectorAll('[name=th]').forEach(r=>r.onchange=()=>{s.theme=r.value;save('sf_set',s);applyTheme()});
+el('sound').checked=s.sound!==false;el('vol').value=s.vol==null?60:s.vol;el('fx').checked=s.fx!==false;
+el('show').value=s.show||'all';el('min').value=s.min||18;el('max').value=s.max||99;el('km').value=s.km||100;el('kmv').textContent=el('km').value;
+el('km').oninput=()=>el('kmv').textContent=el('km').value;
+el('hide').checked=!!s.hideDist;el('vis').value=s.vis||'all';el('nm').checked=s.nm!==false;el('nl').checked=s.nl!==false;el('nn').checked=!!s.nn;
+el('vol').onchange=()=>{s.vol=+el('vol').value;s.sound=true;save('sf_set',s);sfx('yes')};
+el('save').onclick=()=>{
+ Object.assign(s,{sound:el('sound').checked,vol:+el('vol').value,fx:el('fx').checked,show:el('show').value,min:+el('min').value||18,max:+el('max').value||99,km:+el('km').value,hideDist:el('hide').checked,vis:el('vis').value,nm:el('nm').checked,nl:el('nl').checked,nn:el('nn').checked});
+ save('sf_set',s);el('msg').textContent='Mentve.';
+};
+el('reset').onclick=()=>{save('sf_liked',[]);save('sf_passed',[]);el('msg').textContent='Újraindítva: újra látod az összes profilt.'};
+el('wipe').onclick=()=>{if(confirm('Biztosan törlöd az összes mentett adatodat?')){Object.keys(localStorage).filter(k=>k.startsWith('sf_')).forEach(k=>localStorage.removeItem(k));applyTheme();el('msg').textContent='Minden adat törölve.'}};
+</script></body></html>

@@ -1,73 +1,33 @@
 <!DOCTYPE html>
 <html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sorsfonál – a vörös fonal már kötődik hozzád</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
 <body><div class="wrap">
-<header><a class="logo" href="index.html">Sors<i>fonál</i></a>
-<nav><a href="#emberek">Emberek</a><a href="keresek.html">Mit keresel?</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
-
-<div class="hero2">
-<div>
-<h1>A vörös fonal<br>már kötődik hozzád.</h1>
-<p class="muted">A régi mesék szerint a sors láthatatlan fonala összeköti azokat, akiknek találkozniuk kell. Döntsd el te: ki az, akinek a másik végét keresnéd?</p>
-<a class="btn" href="belepes.html">Fiók létrehozása</a>
-</div>
-<div id="ismerkedes">
-<p class="muted" id="left" style="text-align:center;margin:0 0 6px"></p>
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
+<main class="main1">
+<p class="muted" id="left" style="margin:0"></p>
 <div class="deck" id="deck"></div>
 <div class="vote"><button class="big" id="no" data-fx="1" aria-label="Nem">✕</button><button class="big yes" id="yes" data-fx="1" aria-label="Igen">♥</button></div>
-<p class="sub muted" style="font-size:.9rem">Húzd a képet, vagy használd a ← és → billentyűt.</p>
+<p class="sub muted" style="font-size:.9rem;margin:0">Húzd a képet, vagy használd a ← és → billentyűt.</p>
 <p class="sub msg" id="note" role="status"></p>
-</div>
-</div>
-
-<section id="emberek">
-<div class="people-head"><div><h2>Akik most itt vannak</h2><p class="muted">Kitalált példaprofilok, a végleges oldalon valódi emberek lesznek.</p></div>
-<div class="chips" id="chips"></div></div>
-<div class="grid" id="grid"></div>
-</section>
-
-<section><h2>Hogyan működik</h2><div class="steps">
-<div><h3>Mesélj magadról</h3><p class="muted">Pár mondat és néhány érdeklődési kör elég.</p></div>
-<div><h3>Írd le, mit keresel</h3><p class="muted">Komoly kapcsolatot, ismerkedést vagy barátot: mondd el nyíltan.</p></div>
-<div><h3>Kezdj beszélgetni</h3><p class="muted">Ha két ember érdeklődése találkozik, jöhet az első üzenet.</p></div></div></section>
-
-<section><h2>Amit az első tagok mondanak</h2><div class="quotes">
-<blockquote>Három nap után már úgy beszélgettünk, mintha régóta ismernénk egymást.<small>Anna, 27 (példa)</small></blockquote>
-<blockquote>Végre olyan oldal, ahol le lehet írni, mit akarok, és nem kell kitalálni.<small>Bence, 29 (példa)</small></blockquote></div></section>
-
-<div class="cta"><h2>Mit keresel valójában?</h2><a class="btn" href="keresek.html">Leírom</a></div>
-
+</main>
 <div class="lovequote">A szerelem nem ott kezdődik, ahol találkoztok, hanem ahol először nem kell magyarázkodnod.</div>
-<footer>Sorsfonál – első design-vázlat. A profilok és idézetek kitalált példák.</footer>
+<footer>Sorsfonál – első design-vázlat. A profilok kitalált példák.</footer>
 </div>
 <script>
-const P=[
-['Anna',27,3,'Hegyekben nyaralok, otthon főzök. Olyat keresek, akivel lehet nevetni.',['utazás','főzés','természet'],['pop','népzene'],'#B3122E',1],
-['Bence',29,8,'Kosárlabda, gitár, jó beszélgetés egy pohár tea mellett.',['sport','zene','humor'],['rock','jazz'],'#6E0B1D',0],
-['Réka',25,5,'Fényképezek, kávét iszom, és mindig van nálam egy könyv.',['fotózás','könyvek','utazás'],['elektronikus','pop'],'#8C1530',1],
-['Dani',31,12,'Kerékpár, sütés, régi filmek. Vasárnap a legjobb nap.',['sport','film','főzés'],['rock','metál'],'#4A0A15',0],
-['Lilla',26,2,'Koncertek, könyvek, hosszú esti séták a városban.',['zene','könyvek','film'],['jazz','klasszikus'],'#A3162F',0],
-['Márk',30,15,'Futok, utazom, nyelveket tanulok. Hirtelen ötletekre mindig nyitott vagyok.',['sport','utazás','játékok'],['hip-hop','elektronikus'],'#5C0C1B',1],
-['Zsófi',28,6,'Zongorázom, süteményt sütök, és szeretem a csendes estéket.',['zene','főzés','természet'],['klasszikus','jazz'],'#C21F3B',0],
-['Tamás',32,9,'Túrák, fotózás, vasárnapi főzés a barátokkal.',['természet','fotózás','főzés'],['népzene','rock'],'#7A0F22',0]];
 const el=id=>document.getElementById(id);
-const S=load('sf_set',{}),me=load('sf_profile',{}),mine=(me.interests||[]).concat(me.genres||[]);
-const deck=P.filter(p=>p[1]>=(S.min||18)&&p[1]<=(S.max||99));
-const today=()=>new Date().toISOString().slice(0,10);
-const prem=()=>load('sf_premium',false);
-const used=()=>{const d=load('sf_likes',{});return d.day===today()?d.n:0};
-const cap=()=>prem()?Infinity:100;
+const S=SET(),me=load('sf_profile',{}),mine=(me.hobbik||[]).concat(me.zene||[]);
+const deck=PEOPLE.filter(p=>p[1]>=(S.min||18)&&p[1]<=(S.max||99)&&p[2]<=(S.km||100)&&(!S.show||S.show==='all'||p[8]===S.show)&&!liked().includes(p[0])&&!passed().includes(p[0]));
 let i=0;
 function left(){el('left').innerHTML=prem()?'Korlátlan lájk <span class="badge">Prémium</span>':'Mára még '+(cap()-used())+' lájkod van. <a href="premium.html">Több kell?</a>'}
 function cardHtml(p){
  const common=p[4].concat(p[5]).filter(x=>mine.includes(x));
- return '<div class="stamp y">IGEN</div><div class="stamp n">NEM</div><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="info"><h2>'+p[0]+', '+p[1]+'</h2><div class="row2">'+(S.hideDist?'':p[2]+' km · ')+(common.length?common.length+' közös érdeklődés':'új ismerős')+'</div><p style="font-size:.95rem">'+p[3]+'</p><div class="tags" style="margin-top:8px">'+p[4].map(x=>'<span>'+x+'</span>').join('')+p[5].map(x=>'<span>♪ '+x+'</span>').join('')+'</div></div>';
+ return '<div class="stamp y">IGEN</div><div class="stamp n">NEM</div><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="info"><h2>'+p[0]+', '+p[1]+'</h2><div class="row2">'+p[10]+' · '+(S.hideDist?'':p[2]+' km · ')+(common.length?common.length+' közös érdeklődés':'új ismerős')+'</div><p style="font-size:.95rem">'+p[3]+'</p><div class="tags" style="margin-top:8px">'+p[4].map(x=>'<span>'+x+'</span>').join('')+p[5].map(x=>'<span>♪ '+x+'</span>').join('')+'</div><div class="row2" style="margin-top:8px">Kedvenc étel: '+p[9]+'</div></div>';
 }
 function render(){
  left();const d=el('deck');d.innerHTML='';
- if(i>=deck.length){d.innerHTML='<div class="empty"><div><h2>Mára elfogytak a profilok</h2><p class="muted">Szélesítsd a korhatárt a <a href="profil.html">beállításokban</a>, vagy nézz vissza később.</p></div></div>';el('yes').disabled=el('no').disabled=true;return}
+ if(i>=deck.length){d.innerHTML='<div class="empty"><div><h2>Mára elfogytak a profilok</h2><p class="muted">Szélesítsd a szűrőket a <a href="beallitasok.html">beállításokban</a>, vagy nézz vissza később.</p></div></div>';el('yes').disabled=el('no').disabled=true;return}
  if(deck[i+1]){const b=document.createElement('div');b.className='sw back';b.innerHTML=cardHtml(deck[i+1]);d.appendChild(b)}
  const c=document.createElement('div');c.className='sw';c.innerHTML=cardHtml(deck[i]);d.appendChild(c);drag(c);
 }
@@ -76,17 +36,10 @@ function decide(yes){
  el('note').textContent='';
  if(yes&&used()>=cap()){el('note').innerHTML='Elfogyott a mai lájkod. A Prémiummal korlátlan lájkod lesz. <a href="premium.html">Megnézem</a>';c.style.transform='';return}
  const p=deck[i],r=c.getBoundingClientRect();
- if(yes)save('sf_likes',{day:today(),n:used()+1});
+ yes?addLike(p):addPass(p);
  sfx(yes?'yes':'no');burst(r.left+r.width/2,r.top+r.height/2,yes?'yes':'no');
  c.style.transform='translateX('+(yes?'140%':'-140%')+') rotate('+(yes?18:-18)+'deg)';c.style.opacity=0;
  setTimeout(()=>{i++;render();if(yes&&p[7])match(p)},300);
-}
-function match(p){
- sfx('match');
- const o=document.createElement('div');o.className='overlay';
- o.innerHTML='<div><h2>Egyezés!</h2><p>Te és '+p[0]+' kölcsönösen tetszetek egymásnak.</p><p style="margin-top:20px"><button class="btn">Tovább</button></p></div>';
- o.querySelector('button').onclick=()=>o.remove();document.body.appendChild(o);
- burst(innerWidth/2,innerHeight/2,'yes');
 }
 function drag(c){let x0=null,dx=0;
  const yS=c.querySelector('.y'),nS=c.querySelector('.n');
@@ -97,12 +50,4 @@ function drag(c){let x0=null,dx=0;
 el('yes').onclick=()=>decide(true);el('no').onclick=()=>decide(false);
 document.onkeydown=e=>{if(e.key==='ArrowRight')decide(true);if(e.key==='ArrowLeft')decide(false)};
 render();
-
-const T=['Mind','utazás','zene','sport','film','főzés'];let cur='Mind';
-function draw(){
- el('chips').innerHTML=T.map(t=>`<button class="chip" aria-pressed="${t===cur}" data-t="${t}">${t}</button>`).join('');
- el('grid').innerHTML=P.filter(p=>cur==='Mind'||p[4].includes(cur)).map(p=>`<article class="person"><div class="pic" style="background:linear-gradient(160deg,${p[6]},#0D0406)">${p[0][0]}</div><div class="in"><h3>${p[0]}, ${p[1]}</h3><p>${p[3]}</p><div class="tags">${p[4].map(x=>`<span>${x}</span>`).join('')}</div><a class="btn ghost" href="#ismerkedes">Megnézem</a></div></article>`).join('');
- el('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=b.dataset.t;draw()});
-}
-draw();
 </script></body></html>

@@ -121,3 +121,53 @@ header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backd
 .lovequote::before{content:"“";display:block;font-size:6rem;line-height:.6;color:var(--red2)}
 .chip{white-space:nowrap}
 @media(max-width:900px){.hero2{grid-template-columns:1fr;gap:28px}}
+
+/* ===== 3. kör: betűk, vagány világos mód, fonal, új oldalak ===== */
+:root{--disp:'Cinzel',Georgia,serif;--head:'Cormorant Garamond',Georgia,serif}
+.logo,h1{font-family:var(--disp);letter-spacing:.04em}
+.logo{font-size:1.6rem}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.15}
+h2,h3{letter-spacing:.01em}
+nav a[aria-current=page]{color:var(--ink);border-bottom:2px solid var(--red2)}
+.dot{display:inline-block;min-width:20px;height:20px;line-height:20px;text-align:center;border-radius:10px;background:var(--red2);color:#fff;font-size:.75rem;font-weight:600}
+.scroll-thread{width:36px;left:4px}
+#tdot{filter:drop-shadow(0 0 8px #FFC857)}
+#tpath{filter:drop-shadow(0 0 6px #FF2D55)}
+.ad-rail.l{left:52px}
+.main1{min-height:calc(100vh - 80px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 24px}
+.deck{aspect-ratio:auto;max-width:none;width:min(500px,92vw);height:clamp(440px,calc(100vh - 250px),740px);margin:8px auto}
+.big{width:84px;height:84px;font-size:2.2rem}
+.lovequote{padding:110px 0 80px}
+.tabs2{display:flex;gap:8px;margin:8px 0 24px}
+.likes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.when{font-size:.85rem;color:var(--gold)}
+.rowbtn{display:flex;gap:8px;margin-top:auto}.rowbtn .btn{flex:1;text-align:center;padding:10px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.fields .full{grid-column:1/-1}
+.pbar{height:10px;border-radius:6px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin:8px 0 4px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--deep),var(--red2),var(--gold));width:0;transition:width .4s}
+.savebar{position:sticky;bottom:14px;margin-top:28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:10px 14px;box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.photo{width:120px;height:120px;border-radius:50%;object-fit:cover;display:none;margin-bottom:12px;border:3px solid var(--red2)}
+.set label.switch,.set .row{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:12px 0;font-weight:400}
+.set input[type=range]{width:200px;padding:0;accent-color:var(--red2)}
+.set input[type=checkbox],.set input[type=radio]{width:auto}
+.danger{border-color:#c0243e;color:#ff7a8d}
+@media(max-width:600px){.fields{grid-template-columns:1fr}}
+
+/* ---- világos mód: vagány, éles, kontrasztos ---- */
+:root[data-theme=light]{--bg:#F6EDE9;--panel:#FFFFFF;--line:#1A0A0E;--ink:#1A0A0E;--muted:#5A3F43;--red:#E0143C;--red2:#E0143C;--deep:#8E0B24;--gold:#8A5A00;--glow:#FFB6C1;--glow2:#FFD9A0}
+:root[data-theme=light] body{background:radial-gradient(800px 500px at 10% -5%,var(--glow),transparent 60%),radial-gradient(800px 600px at 100% 40%,var(--glow2),transparent 60%),var(--bg);background-attachment:fixed}
+:root[data-theme=light] .person,:root[data-theme=light] .card,:root[data-theme=light] .plan,:root[data-theme=light] .sw,:root[data-theme=light] blockquote,:root[data-theme=light] .cta,:root[data-theme=light] .savebar{border:2px solid #1A0A0E;box-shadow:7px 7px 0 var(--red)}
+:root[data-theme=light] .plan.pro{box-shadow:7px 7px 0 #1A0A0E;border-color:var(--red)}
+:root[data-theme=light] .btn{border:2px solid #1A0A0E;box-shadow:4px 4px 0 #1A0A0E;background:var(--red)}
+:root[data-theme=light] .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #1A0A0E}
+:root[data-theme=light] .btn.ghost{background:#fff;color:#1A0A0E}
+:root[data-theme=light] .big{border:2px solid #1A0A0E;box-shadow:4px 4px 0 #1A0A0E}
+:root[data-theme=light] .big.yes{background:var(--red)}
+:root[data-theme=light] .chip,:root[data-theme=light] .checks label,:root[data-theme=light] input,:root[data-theme=light] select,:root[data-theme=light] textarea{border:1.5px solid #1A0A0E;background:#fff}
+:root[data-theme=light] .chip[aria-pressed=true]{background:#1A0A0E;color:#fff}
+:root[data-theme=light] header{border-bottom:2px solid #1A0A0E;background:color-mix(in srgb,var(--bg) 85%,transparent)}
+:root[data-theme=light] .ad{border:2px dashed #1A0A0E;background:#fff}
+:root[data-theme=light] h1,:root[data-theme=light] h2{text-shadow:2px 2px 0 rgba(224,20,60,.25)}
+:root[data-theme=light] .lovequote{color:#1A0A0E}
+:root[data-theme=light] .tags span{color:#1A0A0E;border-color:#1A0A0E}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ki likeolt? – Sorsfonál</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
+<main style="padding:24px 0 60px">
+<h1>Ki likeolt?</h1>
+<p class="muted">Itt látod, ki lájkolt téged, és kit lájkoltál te.</p>
+<div class="tabs2"><button class="chip" id="t1" data-fx="1">Ők lájkoltak téged</button><button class="chip" id="t2" data-fx="1">Te lájkoltad</button></div>
+<p class="msg" id="note" role="status"></p>
+<div class="likes" id="list"></div>
+</main></div>
+<script>
+const el=id=>document.getElementById(id);let tab='in';
+const WHEN=['2 órája','5 órája','tegnap','tegnap','2 napja','3 napja'];
+function card(p,k,mode){
+ return '<article class="person"><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="in"><span class="when">'+(mode==='in'?'Lájkolt téged · '+WHEN[k%WHEN.length]:(p[7]?'Egyezés':'Vár a válaszra'))+'</span><h3>'+p[0]+', '+p[1]+'</h3><p>'+p[10]+' · '+p[2]+' km</p><p>'+p[3]+'</p><div class="tags">'+p[4].map(x=>'<span>'+x+'</span>').join('')+'</div>'+(mode==='in'?'<div class="rowbtn"><button class="btn" data-fx="1" data-a="y" data-n="'+p[0]+'">Visszalájkolom</button><button class="btn ghost" data-fx="1" data-a="n" data-n="'+p[0]+'">Nem</button></div>':'')+'</div></article>';
+}
+function draw(){
+ el('t1').setAttribute('aria-pressed',tab==='in');el('t2').setAttribute('aria-pressed',tab==='out');
+ const L=liked(),list=tab==='in'?pending():PEOPLE.filter(p=>L.includes(p[0]));
+ el('list').innerHTML=list.length?list.map((p,k)=>card(p,k,tab)).join(''):'<p class="muted">'+(tab==='in'?'Most nincs új lájk. Nézz vissza később!':'Még nem lájkoltál senkit. Indulj el az Ismerkedés oldalon.')+'</p>';
+ el('list').querySelectorAll('button').forEach(b=>b.onclick=e=>{
+  const p=PEOPLE.find(x=>x[0]===b.dataset.n);
+  if(b.dataset.a==='y'){if(used()>=cap()){el('note').innerHTML='Elfogyott a mai lájkod. <a href="premium.html">Prémium</a>';return}addLike(p);burst(e.clientX,e.clientY,'yes');match(p)}
+  else{addPass(p);sfx('no');burst(e.clientX,e.clientY,'no')}
+  setTimeout(draw,50)});
+}
+el('t1').onclick=()=>{tab='in';draw()};el('t2').onclick=()=>{tab='out';draw()};
+draw();
+</script></body></html>
