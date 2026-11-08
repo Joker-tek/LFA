@@ -5,13 +5,21 @@
 <link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
 <body><div class="wrap">
 <header><a class="logo" href="index.html">Sors<i>fonál</i></a>
-<nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<nav><a href="#emberek">Emberek</a><a href="keresek.html">Mit keresel?</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
 
-<div class="hero">
-<svg class="thread" viewBox="0 0 600 500" fill="none" aria-hidden="true"><path d="M-20 420C120 420 140 120 300 160S420 420 620 60" stroke="#E0314F" stroke-width="3" stroke-linecap="round"/><path d="M-20 440C140 460 180 200 320 220S460 380 620 120" stroke="#6E0B1D" stroke-width="2" stroke-linecap="round"/><circle cx="300" cy="160" r="9" fill="#E0314F"/><circle cx="440" cy="300" r="7" fill="#D4B16A"/></svg>
+<div class="hero2">
+<div>
 <h1>A vörös fonal<br>már kötődik hozzád.</h1>
-<p class="muted">A régi mesék szerint a sors láthatatlan fonala összeköti azokat, akiknek találkozniuk kell. Mi csak segítünk megtalálni a másik végét.</p>
-<div class="row"><a class="btn" href="belepes.html">Fiók létrehozása</a><a class="btn ghost" href="keresek.html">Írd le, mit keresel</a></div>
+<p class="muted">A régi mesék szerint a sors láthatatlan fonala összeköti azokat, akiknek találkozniuk kell. Döntsd el te: ki az, akinek a másik végét keresnéd?</p>
+<a class="btn" href="belepes.html">Fiók létrehozása</a>
+</div>
+<div id="ismerkedes">
+<p class="muted" id="left" style="text-align:center;margin:0 0 6px"></p>
+<div class="deck" id="deck"></div>
+<div class="vote"><button class="big" id="no" data-fx="1" aria-label="Nem">✕</button><button class="big yes" id="yes" data-fx="1" aria-label="Igen">♥</button></div>
+<p class="sub muted" style="font-size:.9rem">Húzd a képet, vagy használd a ← és → billentyűt.</p>
+<p class="sub msg" id="note" role="status"></p>
+</div>
 </div>
 
 <section id="emberek">
@@ -30,24 +38,71 @@
 <blockquote>Végre olyan oldal, ahol le lehet írni, mit akarok, és nem kell kitalálni.<small>Bence, 29 (példa)</small></blockquote></div></section>
 
 <div class="cta"><h2>Mit keresel valójában?</h2><a class="btn" href="keresek.html">Leírom</a></div>
+
+<div class="lovequote">A szerelem nem ott kezdődik, ahol találkoztok, hanem ahol először nem kell magyarázkodnod.</div>
 <footer>Sorsfonál – első design-vázlat. A profilok és idézetek kitalált példák.</footer>
 </div>
 <script>
 const P=[
-['Anna',27,'Hegyekben nyaralok, otthon főzök.',['utazás','főzés'],'#B3122E'],
-['Bence',29,'Kosárlabda, gitár, jó beszélgetés.',['sport','zene'],'#6E0B1D'],
-['Réka',25,'Fényképezek, kávét iszom, térképet nézek.',['utazás','film'],'#8C1530'],
-['Dani',31,'Kerékpár, sütés, régi filmek.',['sport','film','főzés'],'#4A0A15'],
-['Lilla',26,'Koncertek, könyvek, hosszú séták.',['zene','film'],'#A3162F'],
-['Márk',30,'Fut, utazik, szívesen tanul nyelveket.',['sport','utazás'],'#5C0C1B'],
-['Zsófi',28,'Zongorázom, süteményt sütök.',['zene','főzés'],'#C21F3B'],
-['Tamás',32,'Túrák, fotózás, vasárnapi főzés.',['utazás','főzés'],'#7A0F22']];
+['Anna',27,3,'Hegyekben nyaralok, otthon főzök. Olyat keresek, akivel lehet nevetni.',['utazás','főzés','természet'],['pop','népzene'],'#B3122E',1],
+['Bence',29,8,'Kosárlabda, gitár, jó beszélgetés egy pohár tea mellett.',['sport','zene','humor'],['rock','jazz'],'#6E0B1D',0],
+['Réka',25,5,'Fényképezek, kávét iszom, és mindig van nálam egy könyv.',['fotózás','könyvek','utazás'],['elektronikus','pop'],'#8C1530',1],
+['Dani',31,12,'Kerékpár, sütés, régi filmek. Vasárnap a legjobb nap.',['sport','film','főzés'],['rock','metál'],'#4A0A15',0],
+['Lilla',26,2,'Koncertek, könyvek, hosszú esti séták a városban.',['zene','könyvek','film'],['jazz','klasszikus'],'#A3162F',0],
+['Márk',30,15,'Futok, utazom, nyelveket tanulok. Hirtelen ötletekre mindig nyitott vagyok.',['sport','utazás','játékok'],['hip-hop','elektronikus'],'#5C0C1B',1],
+['Zsófi',28,6,'Zongorázom, süteményt sütök, és szeretem a csendes estéket.',['zene','főzés','természet'],['klasszikus','jazz'],'#C21F3B',0],
+['Tamás',32,9,'Túrák, fotózás, vasárnapi főzés a barátokkal.',['természet','fotózás','főzés'],['népzene','rock'],'#7A0F22',0]];
+const el=id=>document.getElementById(id);
+const S=load('sf_set',{}),me=load('sf_profile',{}),mine=(me.interests||[]).concat(me.genres||[]);
+const deck=P.filter(p=>p[1]>=(S.min||18)&&p[1]<=(S.max||99));
+const today=()=>new Date().toISOString().slice(0,10);
+const prem=()=>load('sf_premium',false);
+const used=()=>{const d=load('sf_likes',{});return d.day===today()?d.n:0};
+const cap=()=>prem()?Infinity:100;
+let i=0;
+function left(){el('left').innerHTML=prem()?'Korlátlan lájk <span class="badge">Prémium</span>':'Mára még '+(cap()-used())+' lájkod van. <a href="premium.html">Több kell?</a>'}
+function cardHtml(p){
+ const common=p[4].concat(p[5]).filter(x=>mine.includes(x));
+ return '<div class="stamp y">IGEN</div><div class="stamp n">NEM</div><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="info"><h2>'+p[0]+', '+p[1]+'</h2><div class="row2">'+(S.hideDist?'':p[2]+' km · ')+(common.length?common.length+' közös érdeklődés':'új ismerős')+'</div><p style="font-size:.95rem">'+p[3]+'</p><div class="tags" style="margin-top:8px">'+p[4].map(x=>'<span>'+x+'</span>').join('')+p[5].map(x=>'<span>♪ '+x+'</span>').join('')+'</div></div>';
+}
+function render(){
+ left();const d=el('deck');d.innerHTML='';
+ if(i>=deck.length){d.innerHTML='<div class="empty"><div><h2>Mára elfogytak a profilok</h2><p class="muted">Szélesítsd a korhatárt a <a href="profil.html">beállításokban</a>, vagy nézz vissza később.</p></div></div>';el('yes').disabled=el('no').disabled=true;return}
+ if(deck[i+1]){const b=document.createElement('div');b.className='sw back';b.innerHTML=cardHtml(deck[i+1]);d.appendChild(b)}
+ const c=document.createElement('div');c.className='sw';c.innerHTML=cardHtml(deck[i]);d.appendChild(c);drag(c);
+}
+function decide(yes){
+ const c=document.querySelector('.sw:not(.back)');if(!c)return;
+ el('note').textContent='';
+ if(yes&&used()>=cap()){el('note').innerHTML='Elfogyott a mai lájkod. A Prémiummal korlátlan lájkod lesz. <a href="premium.html">Megnézem</a>';c.style.transform='';return}
+ const p=deck[i],r=c.getBoundingClientRect();
+ if(yes)save('sf_likes',{day:today(),n:used()+1});
+ sfx(yes?'yes':'no');burst(r.left+r.width/2,r.top+r.height/2,yes?'yes':'no');
+ c.style.transform='translateX('+(yes?'140%':'-140%')+') rotate('+(yes?18:-18)+'deg)';c.style.opacity=0;
+ setTimeout(()=>{i++;render();if(yes&&p[7])match(p)},300);
+}
+function match(p){
+ sfx('match');
+ const o=document.createElement('div');o.className='overlay';
+ o.innerHTML='<div><h2>Egyezés!</h2><p>Te és '+p[0]+' kölcsönösen tetszetek egymásnak.</p><p style="margin-top:20px"><button class="btn">Tovább</button></p></div>';
+ o.querySelector('button').onclick=()=>o.remove();document.body.appendChild(o);
+ burst(innerWidth/2,innerHeight/2,'yes');
+}
+function drag(c){let x0=null,dx=0;
+ const yS=c.querySelector('.y'),nS=c.querySelector('.n');
+ c.onpointerdown=e=>{x0=e.clientX;c.setPointerCapture(e.pointerId);c.style.transition='none'};
+ c.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;c.style.transform='translateX('+dx+'px) rotate('+dx/20+'deg)';yS.style.opacity=Math.max(0,dx/120);nS.style.opacity=Math.max(0,-dx/120)};
+ c.onpointerup=()=>{if(x0===null)return;x0=null;c.style.transition='';if(Math.abs(dx)>110){decide(dx>0)}else{c.style.transform='';yS.style.opacity=nS.style.opacity=0}dx=0};
+}
+el('yes').onclick=()=>decide(true);el('no').onclick=()=>decide(false);
+document.onkeydown=e=>{if(e.key==='ArrowRight')decide(true);if(e.key==='ArrowLeft')decide(false)};
+render();
+
 const T=['Mind','utazás','zene','sport','film','főzés'];let cur='Mind';
-const chips=document.getElementById('chips'),grid=document.getElementById('grid');
 function draw(){
- chips.innerHTML=T.map(t=>`<button class="chip" aria-pressed="${t===cur}" data-t="${t}">${t}</button>`).join('');
- grid.innerHTML=P.filter(p=>cur==='Mind'||p[3].includes(cur)).map(p=>`<article class="person"><div class="pic" style="background:linear-gradient(160deg,${p[4]},#0D0406)">${p[0][0]}</div><div class="in"><h3>${p[0]}, ${p[1]}</h3><p>${p[2]}</p><div class="tags">${p[3].map(x=>`<span>${x}</span>`).join('')}</div><a class="btn ghost" href="felfedezes.html">Megnézem</a></div></article>`).join('');
- chips.querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=b.dataset.t;draw()});
+ el('chips').innerHTML=T.map(t=>`<button class="chip" aria-pressed="${t===cur}" data-t="${t}">${t}</button>`).join('');
+ el('grid').innerHTML=P.filter(p=>cur==='Mind'||p[4].includes(cur)).map(p=>`<article class="person"><div class="pic" style="background:linear-gradient(160deg,${p[6]},#0D0406)">${p[0][0]}</div><div class="in"><h3>${p[0]}, ${p[1]}</h3><p>${p[3]}</p><div class="tags">${p[4].map(x=>`<span>${x}</span>`).join('')}</div><a class="btn ghost" href="#ismerkedes">Megnézem</a></div></article>`).join('');
+ el('chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=b.dataset.t;draw()});
 }
 draw();
 </script></body></html>

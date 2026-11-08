@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profil – Sorsfonál</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="script.js"></script></head><body><div class="wrap"><header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profil – Sorsfonál</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="script.js"></script></head><body><div class="wrap"><header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="index.html#ismerkedes">Ismerkedés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
 <main class="card wide">
 <div class="avatar" id="av">?</div>
 <h1>Profilod <span class="badge" id="pb" hidden>Prémium</span></h1>
@@ -35,6 +35,6 @@ const vals=n=>[...document.querySelectorAll('[name='+n+']:checked')].map(c=>c.va
 el('save').onclick=()=>{
  save('sf_profile',{nev:el('nev').value,kor:el('kor').value,varos:el('varos').value,bio:el('bio').value,eloado:el('eloado').value,cel:el('cel').value,interests:vals('i'),genres:vals('g')});
  s.min=+el('min').value||18;s.max=+el('max').value||99;s.hideDist=el('hide').checked;s.notif=el('notif').checked;save('sf_set',s);
- el('msg').innerHTML='Mentve. <a href="felfedezes.html">Irány az ismerkedés</a>';
+ el('msg').innerHTML='Mentve. <a href="index.html#ismerkedes">Irány az ismerkedés</a>';
 };
 </script></body></html>
