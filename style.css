@@ -171,3 +171,18 @@ nav a[aria-current=page]{color:var(--ink);border-bottom:2px solid var(--red2)}
 :root[data-theme=light] h1,:root[data-theme=light] h2{text-shadow:2px 2px 0 rgba(224,20,60,.25)}
 :root[data-theme=light] .lovequote{color:#1A0A0E}
 :root[data-theme=light] .tags span{color:#1A0A0E;border-color:#1A0A0E}
+
+/* ===== 4. kör: nagyobb kártya, sárga pont a fonal végén ===== */
+.scroll-thread{overflow:visible}
+#tdot{position:fixed;left:0;top:0;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFF3B0,#FFC400 70%);box-shadow:0 0 0 3px rgba(255,196,0,.35),0 0 18px 6px rgba(255,196,0,.75);z-index:8;pointer-events:none;filter:none}
+:root[data-theme=light] #tdot{border:2px solid #1A0A0E}
+.main1{padding:0 0 12px;justify-content:flex-start}
+.deck{width:min(660px,94vw);height:clamp(520px,calc(100vh - 170px),900px);margin:6px auto}
+.sw h2{font-size:2.9rem}
+.sw .info{padding:110px 30px 30px}
+.sw .info p{font-size:1.1rem}
+.sw .row2{font-size:1.02rem}
+.sw .tags span{font-size:.95rem;padding:3px 13px}
+.sw .pic{font-size:16rem}
+.vote{margin:14px 0 4px}
+@media(max-width:700px){.deck{height:clamp(480px,calc(100vh - 200px),760px)}.sw h2{font-size:2.2rem}}

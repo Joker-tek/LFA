@@ -64,14 +64,14 @@ document.addEventListener('DOMContentLoaded',()=>{
   .map(([h,t])=>'<a href="'+h+'"'+(cur===h?' aria-current="page"':'')+'>'+t+(h==='likeok.html'&&n?' <span class="dot">'+n+'</span>':'')+'</a>').join('')+'<a class="btn" href="belepes.html">Belépés</a>'}
  /* reklámhelyek */
  const ad='<div class="ad"><div><b>Hirdetés</b>Itt lehet a te reklámod</div></div>';
- document.body.insertAdjacentHTML('beforeend','<aside class="ad-rail l" aria-label="Hirdetés">'+ad+'</aside><aside class="ad-rail r" aria-label="Hirdetés">'+ad+'</aside><div id="glow"></div><svg class="scroll-thread" viewBox="0 0 36 1000" preserveAspectRatio="none" aria-hidden="true"><path id="tbase" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="2" vector-effect="non-scaling-stroke"/><path id="tpath" fill="none" stroke="#FF2D55" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle id="tdot" r="9" fill="#FFC857"/></svg>');
+ document.body.insertAdjacentHTML('beforeend','<aside class="ad-rail l" aria-label="Hirdetés">'+ad+'</aside><aside class="ad-rail r" aria-label="Hirdetés">'+ad+'</aside><div id="glow"></div><svg class="scroll-thread" viewBox="0 0 36 1000" preserveAspectRatio="none" aria-hidden="true"><path id="tbase" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="2" vector-effect="non-scaling-stroke"/><path id="tpath" fill="none" stroke="#FF2D55" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg><div id="tdot"></div>');
  const w=document.querySelector('.wrap');if(w)w.insertAdjacentHTML('beforeend','<div class="ad ad-bar"><div><b>Hirdetés</b>Itt lehet a te reklámod</div></div>');
  /* mozgó vörös fonal görgetésre */
  let d='M18 0';for(let y=0;y<1000;y+=125){const s=(y/125)%2?-1:1;d+=' C '+(18+s*14)+' '+(y+40)+', '+(18-s*14)+' '+(y+85)+', 18 '+(y+125)}
  const p=document.getElementById('tpath'),base=document.getElementById('tbase'),dot=document.getElementById('tdot');
  p.setAttribute('d',d);base.setAttribute('d',d);const L=p.getTotalLength();p.style.strokeDasharray=L;
  let tick=false;const upd=()=>{tick=false;const m=document.documentElement.scrollHeight-innerHeight;const k=m>0?Math.min(1,Math.max(0,scrollY/m)):0;
-  p.style.strokeDashoffset=L*(1-k);const pt=p.getPointAtLength(Math.max(.1,L*k));dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y)};
+  p.style.strokeDashoffset=L*(1-k);const pt=p.getPointAtLength(Math.max(.1,L*k));dot.style.transform='translate('+(4+pt.x)+'px,'+Math.min(innerHeight-12,Math.max(12,pt.y*innerHeight/1000))+'px)'};
  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});addEventListener('resize',upd);upd();
  const g=document.getElementById('glow');addEventListener('pointermove',e=>{g.style.transform='translate('+(e.clientX-250)+'px,'+(e.clientY-250)+'px)'},{passive:true});
 });
