@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sorsfonál – a vörös fonal már kötődik hozzád</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a>
+<nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+
+<div class="hero">
+<svg class="thread" viewBox="0 0 600 500" fill="none" aria-hidden="true"><path d="M-20 420C120 420 140 120 300 160S420 420 620 60" stroke="#E0314F" stroke-width="3" stroke-linecap="round"/><path d="M-20 440C140 460 180 200 320 220S460 380 620 120" stroke="#6E0B1D" stroke-width="2" stroke-linecap="round"/><circle cx="300" cy="160" r="9" fill="#E0314F"/><circle cx="440" cy="300" r="7" fill="#D4B16A"/></svg>
+<h1>A vörös fonal<br>már kötődik hozzád.</h1>
+<p class="muted">A régi mesék szerint a sors láthatatlan fonala összeköti azokat, akiknek találkozniuk kell. Mi csak segítünk megtalálni a másik végét.</p>
+<div class="row"><a class="btn" href="belepes.html">Fiók létrehozása</a><a class="btn ghost" href="keresek.html">Írd le, mit keresel</a></div>
+</div>
+
+<section id="emberek">
+<div class="people-head"><div><h2>Akik most itt vannak</h2><p class="muted">Kitalált példaprofilok, a végleges oldalon valódi emberek lesznek.</p></div>
+<div class="chips" id="chips"></div></div>
+<div class="grid" id="grid"></div>
+</section>
+
+<section><h2>Hogyan működik</h2><div class="steps">
+<div><h3>Mesélj magadról</h3><p class="muted">Pár mondat és néhány érdeklődési kör elég.</p></div>
+<div><h3>Írd le, mit keresel</h3><p class="muted">Komoly kapcsolatot, ismerkedést vagy barátot: mondd el nyíltan.</p></div>
+<div><h3>Kezdj beszélgetni</h3><p class="muted">Ha két ember érdeklődése találkozik, jöhet az első üzenet.</p></div></div></section>
+
+<section><h2>Amit az első tagok mondanak</h2><div class="quotes">
+<blockquote>Három nap után már úgy beszélgettünk, mintha régóta ismernénk egymást.<small>Anna, 27 (példa)</small></blockquote>
+<blockquote>Végre olyan oldal, ahol le lehet írni, mit akarok, és nem kell kitalálni.<small>Bence, 29 (példa)</small></blockquote></div></section>
+
+<div class="cta"><h2>Mit keresel valójában?</h2><a class="btn" href="keresek.html">Leírom</a></div>
+<footer>Sorsfonál – első design-vázlat. A profilok és idézetek kitalált példák.</footer>
+</div>
+<script>
+const P=[
+['Anna',27,'Hegyekben nyaralok, otthon főzök.',['utazás','főzés'],'#B3122E'],
+['Bence',29,'Kosárlabda, gitár, jó beszélgetés.',['sport','zene'],'#6E0B1D'],
+['Réka',25,'Fényképezek, kávét iszom, térképet nézek.',['utazás','film'],'#8C1530'],
+['Dani',31,'Kerékpár, sütés, régi filmek.',['sport','film','főzés'],'#4A0A15'],
+['Lilla',26,'Koncertek, könyvek, hosszú séták.',['zene','film'],'#A3162F'],
+['Márk',30,'Fut, utazik, szívesen tanul nyelveket.',['sport','utazás'],'#5C0C1B'],
+['Zsófi',28,'Zongorázom, süteményt sütök.',['zene','főzés'],'#C21F3B'],
+['Tamás',32,'Túrák, fotózás, vasárnapi főzés.',['utazás','főzés'],'#7A0F22']];
+const T=['Mind','utazás','zene','sport','film','főzés'];let cur='Mind';
+const chips=document.getElementById('chips'),grid=document.getElementById('grid');
+function draw(){
+ chips.innerHTML=T.map(t=>`<button class="chip" aria-pressed="${t===cur}" data-t="${t}">${t}</button>`).join('');
+ grid.innerHTML=P.filter(p=>cur==='Mind'||p[3].includes(cur)).map(p=>`<article class="person"><div class="pic" style="background:linear-gradient(160deg,${p[4]},#0D0406)">${p[0][0]}</div><div class="in"><h3>${p[0]}, ${p[1]}</h3><p>${p[2]}</p><div class="tags">${p[3].map(x=>`<span>${x}</span>`).join('')}</div><a class="btn ghost" href="felfedezes.html">Megnézem</a></div></article>`).join('');
+ chips.querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=b.dataset.t;draw()});
+}
+draw();
+</script></body></html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mit keresel? – Sorsfonál</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<main class="card wide">
+<h1>Mit keresel?</h1>
+<p class="muted">Írd le saját szavaiddal. Ez alapján mutatunk neked embereket.</p>
+<div class="two"><div><label for="nev">Becenév</label><input id="nev"></div><div><label for="kor">Korod</label><input id="kor" type="number" min="18" max="99"></div></div>
+<label for="cel">Mit szeretnél?</label>
+<select id="cel"><option>Komoly kapcsolatot</option><option>Ismerkedést, találkozásokat</option><option>Barátságot</option><option>Még nem tudom</option></select>
+<fieldset><legend>Ami fontos neked</legend><div class="checks" id="checks"></div></fieldset>
+<label for="szoveg">Írd le, kit keresel</label>
+<textarea id="szoveg" placeholder="Például: valakit, aki szeret túrázni, és nem fél kérdezni."></textarea>
+<p style="margin-top:20px"><button class="btn" id="send">Elküldöm</button></p>
+<div id="out"></div>
+</main></div>
+<script>
+const I=['utazás','zene','sport','film','főzés','természet','könyvek','humor'];
+checks.innerHTML=I.map(x=>`<label><input type="checkbox" value="${x}">${x}</label>`).join('');
+send.onclick=()=>{
+ const t=[...checks.querySelectorAll('input:checked')].map(c=>c.value);
+ if(!szoveg.value.trim()){out.innerHTML='<p class="msg">Írj legalább egy mondatot arról, kit keresel.</p>';return;}
+ const e=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+ out.innerHTML=`<blockquote style="margin-top:24px">${e(szoveg.value)}<small>${e(nev.value||'Valaki')}${kor.value?', '+e(kor.value):''} · ${cel.value}${t.length?' · '+t.join(', '):''}</small></blockquote><p class="msg">Ez még csak egy minta, nem mentettünk el semmit.</p>`;
+};
+</script></body></html>

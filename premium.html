@@ -1,0 +1,24 @@
+<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Premium – Sorsfonál</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="script.js"></script></head><body><div class="wrap"><header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<main><h1 style="font-size:3rem">Prémium</h1>
+<p class="muted">Több lájk, jobb láthatóság. Bármikor lemondható.</p>
+<div class="plans">
+<div class="plan"><h3>Ingyenes</h3><p class="price">0 €</p><ul><li>10 lájk naponta</li><li>Teljes profil és beállítások</li><li>Egyezések és üzenetek</li></ul></div>
+<div class="plan pro"><h3>Prémium <span class="badge">ajánlott</span></h3><p class="price">9,99 € <small style="font:1rem var(--body)">/ hó</small></p><ul><li>Korlátlan lájk</li><li>A profilod előrébb jelenik meg másoknál</li><li>Látod, ki lájkolt téged</li><li>Prémium jelvény a profilodon</li></ul></div>
+</div>
+<section class="card wide" style="margin:0 auto 80px">
+<h2 style="font-size:2rem">Feliratkozás</h2><p class="muted" id="st"></p>
+<div class="two"><div><label for="nev">Teljes név</label><input id="nev" autocomplete="name"></div><div><label for="email">E-mail cím</label><input id="email" type="email" autocomplete="email"></div></div>
+<label for="per">Időszak</label><select id="per"><option value="m">Havi: 9,99 €</option><option value="y">Éves: 79,99 € (két hónap ingyen)</option></select>
+<label for="kupon">Kuponkód (ha van)</label><input id="kupon">
+<p style="margin-top:20px"><button class="btn" id="go">Prémium aktiválása (teszt)</button> <button class="btn ghost" id="off" hidden>Lemondás (teszt)</button></p>
+<p class="msg" id="msg" role="status"></p>
+<p class="muted" style="margin-top:12px">Ez teszt mód: nem terhelünk meg semmit, és kártyaadatot nem kérünk. Valódi fizetéshez fizetési szolgáltató kell (például Stripe), ami maga kezeli a kártyaadatokat, így azok sosem kerülnek a mi oldalunkra.</p>
+</section></main></div>
+<script>
+const el=id=>document.getElementById(id);
+function st(){const p=load('sf_premium',false);el('st').textContent=p?'Most Prémium előfizető vagy.':'Most az ingyenes csomagot használod.';el('off').hidden=!p;el('go').hidden=p}
+el('go').onclick=()=>{if(!el('nev').value.trim()||!el('email').value.includes('@')){el('msg').textContent='Add meg a nevedet és egy érvényes e-mail címet.';return}
+ save('sf_premium',true);el('msg').innerHTML='Kész, a Prémium aktív (teszt). <a href="felfedezes.html">Irány az ismerkedés</a>';st()};
+el('off').onclick=()=>{save('sf_premium',false);el('msg').textContent='Lemondva (teszt).';st()};
+st();
+</script></body></html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html><html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Profil – Sorsfonál</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><script src="script.js"></script></head><body><div class="wrap"><header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav><a href="felfedezes.html">Felfedezés</a><a href="profil.html">Profil</a><a href="premium.html">Premium</a><a class="btn" href="belepes.html">Belépés</a></nav></header>
+<main class="card wide">
+<div class="avatar" id="av">?</div>
+<h1>Profilod <span class="badge" id="pb" hidden>Prémium</span></h1>
+<p class="muted">Minél többet kitöltesz, annál jobb embereket mutatunk.</p>
+<div class="two"><div><label for="nev">Becenév</label><input id="nev"></div><div><label for="kor">Korod</label><input id="kor" type="number" min="18" max="99"></div></div>
+<label for="varos">Város</label><input id="varos">
+<label for="bio">Rólad</label><textarea id="bio" placeholder="Pár mondat arról, ki vagy és mit szeretsz csinálni."></textarea>
+<fieldset><legend>Mit szeretsz csinálni?</legend><div class="checks" id="ints"></div></fieldset>
+<fieldset><legend>Milyen zenéket szeretsz?</legend><div class="checks" id="gen"></div></fieldset>
+<label for="eloado">Kedvenc előadók</label><input id="eloado" placeholder="Vesszővel elválasztva">
+<label for="cel">Mit keresel?</label>
+<select id="cel"><option>Komoly kapcsolatot</option><option>Ismerkedést</option><option>Barátságot</option><option>Még nem tudom</option></select>
+<h2 class="sec">Beállítások</h2>
+<fieldset><legend>Megjelenés</legend><div class="checks" id="th"></div></fieldset>
+<div class="two"><div><label for="min">Legkisebb kor, akit látni akarsz</label><input id="min" type="number" min="18" max="99"></div><div><label for="max">Legnagyobb kor</label><input id="max" type="number" min="18" max="99"></div></div>
+<label class="switch"><input type="checkbox" id="hide">Ne mutassa a távolságot a kártyákon</label>
+<label class="switch"><input type="checkbox" id="notif">Értesítést kérek új egyezésről</label>
+<p style="margin-top:20px"><button class="btn" id="save">Mentés</button></p><p class="msg" id="msg" role="status"></p>
+<p class="muted" style="margin-top:12px">A tárolás most a saját böngésződben történik, nem küldjük el sehova.</p>
+</main></div>
+<script>
+const p=load('sf_profile',{}),s=load('sf_set',{theme:'dark'});
+const el=id=>document.getElementById(id);
+const chk=(box,list,sel,name)=>{el(box).innerHTML=list.map(x=>'<label><input type="checkbox" name="'+name+'" value="'+x+'"'+(sel.includes(x)?' checked':'')+'>'+x+'</label>').join('')};
+chk('ints',INTERESTS,p.interests||[],'i');chk('gen',GENRES,p.genres||[],'g');
+const TH=[['dark','Sötét'],['light','Világos'],['auto','Rendszer szerint']];
+el('th').innerHTML=TH.map(t=>'<label><input type="radio" name="th" value="'+t[0]+'"'+((s.theme||'dark')===t[0]?' checked':'')+'>'+t[1]+'</label>').join('');
+document.querySelectorAll('[name=th]').forEach(r=>r.onchange=()=>{s.theme=r.value;save('sf_set',s);applyTheme()});
+el('nev').value=p.nev||'';el('kor').value=p.kor||'';el('varos').value=p.varos||'';el('bio').value=p.bio||'';el('eloado').value=p.eloado||'';el('cel').value=p.cel||'Komoly kapcsolatot';
+el('min').value=s.min||18;el('max').value=s.max||99;el('hide').checked=!!s.hideDist;el('notif').checked=!!s.notif;
+const ini=()=>{el('av').textContent=(el('nev').value||'?')[0].toUpperCase()};ini();el('nev').oninput=ini;
+el('pb').hidden=!load('sf_premium',false);
+const vals=n=>[...document.querySelectorAll('[name='+n+']:checked')].map(c=>c.value);
+el('save').onclick=()=>{
+ save('sf_profile',{nev:el('nev').value,kor:el('kor').value,varos:el('varos').value,bio:el('bio').value,eloado:el('eloado').value,cel:el('cel').value,interests:vals('i'),genres:vals('g')});
+ s.min=+el('min').value||18;s.max=+el('max').value||99;s.hideDist=el('hide').checked;s.notif=el('notif').checked;save('sf_set',s);
+ el('msg').innerHTML='Mentve. <a href="felfedezes.html">Irány az ismerkedés</a>';
+};
+</script></body></html>
