@@ -69,14 +69,14 @@ document.addEventListener('DOMContentLoaded',()=>{
  /* vörös fonal: az oldal teljes hosszában fut, a vége pontosan a görgetést követi */
  const docH=()=>Math.max(w?w.offsetTop+w.offsetHeight:0,innerHeight);
  const thr=document.getElementById('thr'),svg=document.getElementById('tsvg'),p=document.getElementById('tpath'),base=document.getElementById('tbase'),dot=document.getElementById('tdot');
- let H=0,L=1;
+ let H=0,L=1,W=0;
  function build(h){H=h;thr.style.height=h+'px';svg.setAttribute('width',36);svg.setAttribute('height',h);svg.setAttribute('viewBox','0 0 36 '+h);
-  let d='M18 0';for(let y=0;y<h;y+=160){const s=(y/160)%2?-1:1;d+=' C '+(18+s*14)+' '+(y+50)+', '+(18-s*14)+' '+(y+110)+', 18 '+(y+160)}
-  p.setAttribute('d',d);base.setAttribute('d',d);L=p.getTotalLength();p.style.strokeDasharray=L}
+  const mob=innerWidth<700,cx=mob?10:18,am=mob?5:14;let d='M'+cx+' 0';for(let y=0;y<h;y+=160){const s=(y/160)%2?-1:1;d+=' C '+(cx+s*am)+' '+(y+50)+', '+(cx-s*am)+' '+(y+110)+', '+cx+' '+(y+160)}
+  p.setAttribute('d',d);base.setAttribute('d',d);L=p.getTotalLength()}
  let tick=false;
- const upd=()=>{tick=false;const h=docH();if(Math.abs(h-H)>2)build(h);
+ const upd=()=>{tick=false;const h=docH();if(Math.abs(h-H)>2||W!==innerWidth){W=innerWidth;build(h)}
   const m=h-innerHeight,k=m>0?Math.min(1,Math.max(0,scrollY/m)):0,tip=scrollY+innerHeight*(.2+.6*k),f=Math.min(1,Math.max(0,tip/h));
-  p.style.strokeDashoffset=L*(1-f);const pt=p.getPointAtLength(Math.max(.1,L*f));dot.style.transform='translate('+(4+pt.x)+'px,'+pt.y+'px)'};
+  const tipLen=L*f,seg=Math.min(L,(innerWidth<700?220:340)*L/h),start=Math.max(0,tipLen-seg);p.style.strokeDasharray=seg+' '+L;p.style.strokeDashoffset=-start;const pt=p.getPointAtLength(Math.max(.1,tipLen));dot.style.transform='translate('+(4+pt.x)+'px,'+pt.y+'px)'};
  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});addEventListener('resize',upd);addEventListener('load',upd);upd();
  const g=document.getElementById('glow');addEventListener('pointermove',e=>{g.style.transform='translate('+(e.clientX-250)+'px,'+(e.clientY-250)+'px)'},{passive:true});
 });
