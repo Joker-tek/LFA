@@ -16,14 +16,15 @@
 const el=id=>document.getElementById(id);let tab='in';
 const WHEN=['2 órája','5 órája','tegnap','tegnap','2 napja','3 napja'];
 function card(p,k,mode){
- return '<article class="person"><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="in"><span class="when">'+(mode==='in'?'Lájkolt téged · '+WHEN[k%WHEN.length]:(p[7]?'Egyezés':'Vár a válaszra'))+'</span><h3>'+p[0]+', '+p[1]+'</h3><p>'+p[10]+' · '+p[2]+' km</p><p>'+p[3]+'</p><div class="tags">'+p[4].map(x=>'<span>'+x+'</span>').join('')+'</div>'+(mode==='in'?'<div class="rowbtn"><button class="btn" data-fx="1" data-a="y" data-n="'+p[0]+'">Visszalájkolom</button><button class="btn ghost" data-fx="1" data-a="n" data-n="'+p[0]+'">Nem</button></div>':'')+'</div></article>';
+ return '<article class="person"><div class="pic" style="background:linear-gradient(160deg,'+p.szin+',#0D0406)">'+p.nev[0]+'</div><div class="in"><span class="when">'+(mode==='in'?'Lájkolt téged · '+WHEN[k%WHEN.length]:(p.lajkolt?'Egyezés':'Vár a válaszra'))+'</span><h3>'+p.nev+', '+p.kor+'</h3><p>'+p.foglalkozas+' · '+p.km+' km</p>'+fonalJel(fonal(p))+'<p>'+p.bio+'</p><div class="tags">'+p.hobbik.map(x=>'<span>'+x+'</span>').join('')+'</div>'+(mode==='in'?'<div class="rowbtn"><button class="btn" data-fx="1" data-a="y" data-n="'+p.nev+'">Visszalájkolom</button><button class="btn ghost" data-fx="1" data-a="n" data-n="'+p.nev+'">Nem</button></div>':p.lajkolt?'<div class="rowbtn"><a class="btn" href="uzenetek.html#'+encodeURIComponent(p.nev)+'">Írok neki</a></div>':'')+'</div></article>';
 }
 function draw(){
  el('t1').setAttribute('aria-pressed',tab==='in');el('t2').setAttribute('aria-pressed',tab==='out');
- const L=liked(),list=tab==='in'?pending():PEOPLE.filter(p=>L.includes(p[0]));
+ const L=liked(),list=tab==='in'?pending():PEOPLE.filter(p=>L.includes(p.nev));
+ list.sort((a,b)=>(fonal(b).pct||0)-(fonal(a).pct||0));   // a legerősebb fonal elöl
  el('list').innerHTML=list.length?list.map((p,k)=>card(p,k,tab)).join(''):'<p class="muted">'+(tab==='in'?'Most nincs új lájk. Nézz vissza később!':'Még nem lájkoltál senkit. Indulj el az Ismerkedés oldalon.')+'</p>';
  el('list').querySelectorAll('button').forEach(b=>b.onclick=e=>{
-  const p=PEOPLE.find(x=>x[0]===b.dataset.n);
+  const p=PEOPLE.find(x=>x.nev===b.dataset.n);
   if(b.dataset.a==='y'){if(used()>=cap()){el('note').innerHTML='Elfogyott a mai lájkod. <a href="premium.html">Prémium</a>';return}addLike(p);burst(e.clientX,e.clientY,'yes');match(p)}
   else{addPass(p);sfx('no');burst(e.clientX,e.clientY,'no')}
   setTimeout(draw,50)});

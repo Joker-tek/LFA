@@ -43,6 +43,6 @@ el('save').onclick=()=>{
  Object.assign(s,{sound:el('sound').checked,vol:+el('vol').value,fx:el('fx').checked,show:el('show').value,min:+el('min').value||18,max:+el('max').value||99,km:+el('km').value,hideDist:el('hide').checked,vis:el('vis').value,nm:el('nm').checked,nl:el('nl').checked,nn:el('nn').checked});
  save('sf_set',s);el('msg').textContent='Mentve.';
 };
-el('reset').onclick=()=>{save('sf_liked',[]);save('sf_passed',[]);el('msg').textContent='Újraindítva: újra látod az összes profilt.'};
+el('reset').onclick=()=>{save('sf_liked',[]);save('sf_passed',[]);['sf_chat','sf_seen','sf_napi'].forEach(k=>localStorage.removeItem(k));el('msg').textContent='Újraindítva: újra látod az összes profilt.'};
 el('wipe').onclick=()=>{if(confirm('Biztosan törlöd az összes mentett adatodat?')){Object.keys(localStorage).filter(k=>k.startsWith('sf_')).forEach(k=>localStorage.removeItem(k));applyTheme();el('msg').textContent='Minden adat törölve.'}};
 </script></body></html>

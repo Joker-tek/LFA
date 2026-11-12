@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Üzenetek – Sorsfonál</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script src="script.js"></script></head>
+<body><div class="wrap">
+<header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
+<main class="chat" id="chat">
+<aside class="clist" aria-label="Egyezéseid"><h1>Üzenetek</h1><div id="list"></div></aside>
+<section class="cpane" id="pane"><div class="cnone muted">Válassz ki valakit a listából.</div></section>
+</main>
+<p class="muted chatnote">Ez még csak minta: a válaszokat a gép írja, és minden a saját böngésződben marad.</p>
+</div>
+<script>
+const el=id=>document.getElementById(id);
+let cur=null;const gepel=new Set();   // akik éppen „gépelnek”
+const ALTALANOS=['Ez jó kérdés! 😄 Hadd gondolkodjak rajta egy kicsit.','Haha, ezt szeretem. És veled mi a helyzet?','Szerintem ezt jobb lenne személyesen megbeszélni. Mit szólsz?','Mesélj még!'];
+/* jégtörők: a közös szálaitokból készülnek */
+const JEGTORO={'utazás':'Hová utaznál holnap, ha bárhová mehetnél?','főzés':'Mi az a fogás, amivel bárkit levennél a lábáról?','természet':'Melyik a kedvenc helyed a szabadban?',
+ 'sport':'Milyen sportot űzöl mostanában?','zene':'Mit hallgatsz mostanában a legtöbbet?','humor':'Min nevettél utoljára hangosan?','fotózás':'Melyik a kedvenc fotód, amit te készítettél?',
+ 'könyvek':'Melyik könyvet adnád a kezembe elsőként?','film':'Melyik filmet tudnád százszor is megnézni?','játékok':'Melyik játékkal töltöttél el túl sok időt?',
+ 'túrázás':'Melyik volt eddig a legszebb túrád?','technika':'Mi a legjobb kütyü, amit valaha vettél?','kávé':'Hol iszod a kedvenc kávédat?','kávézás':'Hol iszod a kedvenc kávédat?',
+ 'tea':'Milyen teát innál most szívesen?','bor':'Vörös vagy fehér? És melyik a kedvenc borod?','kirándulás':'Hová mennél kirándulni ezen a hétvégén?'};
+function jegtoro(p){const o=[];
+ fonal(p).sz.forEach(x=>{if(JEGTORO[x])o.push(JEGTORO[x]);else if(x.startsWith('♪ '))o.push('Melyik '+x.slice(2)+' számot ajánlanád nekem?')});
+ const r=[...new Set(o)].slice(0,2);
+ if(p.elsorandi)r.push('Olvastam az ideális első randidról. Ezt komolyan gondoltad? 😄');
+ if(r.length<3)r.push('Mi volt ma a legjobb pillanatod?');
+ return r}
+const avatar=p=>'<div class="cav" style="background:linear-gradient(160deg,'+p.szin+',#0D0406)" aria-hidden="true">'+p.nev[0]+'</div>';
+function list(){
+ const M=egyezesek();
+ if(!M.length){el('list').innerHTML='<p class="muted">Még nincs egyezésed. Ha valaki, akit lájkolsz, téged is lájkolt, a fonal összeköt titeket, és itt tudtok beszélgetni.</p><p style="margin-top:14px"><a class="btn" href="index.html">Irány az ismerkedés</a></p>';return}
+ el('list').innerHTML=M.map(p=>{const c=beszelgetes(p.nev),last=c[c.length-1],u=olvasatlan(p.nev);
+  return '<button class="citem'+(cur&&cur.nev===p.nev?' on':'')+'" data-n="'+esc(p.nev)+'">'+avatar(p)+'<span class="ctext"><b>'+esc(p.nev)+'</b><small>'+(gepel.has(p.nev)?'gépel…':last?(last.en?'Te: ':'')+esc(last.t):'Új egyezés, köszönj neki!')+'</small></span>'+(u>0||!c.length?'<span class="dot">'+(u>0?u:'új')+'</span>':'')+'</button>'}).join('');
+ el('list').querySelectorAll('.citem').forEach(b=>b.onclick=()=>nyit(b.dataset.n));
+}
+function nyit(n){
+ const p=egyezesek().find(x=>x.nev===n);if(!p)return;
+ cur=p;history.replaceState(null,'','#'+encodeURIComponent(n));el('chat').classList.add('open');
+ const f=fonal(p);
+ el('pane').innerHTML='<div class="chead"><button class="back" id="back" aria-label="Vissza a listához">←</button>'+avatar(p)+'<div><b>'+esc(p.nev)+', '+p.kor+'</b><small>'+esc(p.foglalkozas)+' · '+p.km+' km</small></div>'+fonalJel(f)+'</div>'
+  +(f.sz.length?'<div class="tags k cthreads">'+f.sz.slice(0,6).map(x=>'<span>'+esc(x)+'</span>').join('')+'</div>':'')
+  +(p.elsorandi?'<p class="crandi">Az ideális első randija: <i>'+esc(p.elsorandi)+'</i></p>':'')
+  +'<div class="msgs" id="msgs"></div><div class="ice" id="ice"></div><form class="cform" id="form"><input id="txt" autocomplete="off" placeholder="Írj neki valamit…" aria-label="Üzenet"><button class="btn" data-fx="1">Küldés</button></form>';
+ el('back').onclick=()=>{el('chat').classList.remove('open');cur=null;history.replaceState(null,'',location.pathname);list()};
+ el('form').onsubmit=e=>{e.preventDefault();kuld(el('txt').value)};
+ msgs();list();
+ const c=beszelgetes(n);if(c.length&&c[c.length-1].en)valasz(p);   // ha a te üzeneted volt az utolsó, most válaszol
+ if(matchMedia('(min-width:701px)').matches)el('txt').focus();
+}
+function msgs(){const p=cur,c=beszelgetes(p.nev),box=el('msgs');
+ box.innerHTML=c.length?c.map(m=>'<div class="bub'+(m.en?' en':'')+'">'+esc(m.t)+'</div>').join('')
+  :'<p class="muted cempty">Összekötött titeket a fonal. Az első szó a legnehezebb, ezért hoztunk pár ötletet a közös szálaitokból:</p>';
+ if(gepel.has(p.nev))box.insertAdjacentHTML('beforeend','<div class="bub typing" aria-label="gépel"><i></i><i></i><i></i></div>');
+ box.scrollTop=box.scrollHeight;
+ el('ice').innerHTML=c.some(m=>m.en)?'':jegtoro(p).map(t=>'<button class="chip" type="button" data-fx="1">'+esc(t)+'</button>').join('');
+ el('ice').querySelectorAll('button').forEach(b=>b.onclick=()=>{el('txt').value=b.textContent;el('txt').focus()});
+ olvasva(p.nev);
+}
+function kuld(t){t=t.trim();if(!t||!cur)return;uzen(cur.nev,{en:1,t,at:Date.now()});el('txt').value='';sfx('click');msgs();list();valasz(cur)}
+function valasz(p){if(gepel.has(p.nev))return;gepel.add(p.nev);if(cur===p)msgs();list();
+ setTimeout(()=>{const k=beszelgetes(p.nev).filter(m=>!m.en).length,V=p.valaszok||[];
+  uzen(p.nev,{t:V[k]||ALTALANOS[(k-V.length)%ALTALANOS.length],at:Date.now()});gepel.delete(p.nev);
+  if(cur&&cur.nev===p.nev){msgs();sfx('msg')}list()},1400+Math.random()*1200)}
+list();
+const h=decodeURIComponent(location.hash.slice(1));if(h)nyit(h);
+</script></body></html>

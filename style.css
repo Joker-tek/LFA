@@ -227,3 +227,85 @@ header{box-shadow:0 0 0 100vmax color-mix(in srgb,var(--bg) 55%,transparent);cli
  .likes{grid-template-columns:1fr;gap:16px}
  .likes .pic{aspect-ratio:2/1;font-size:4.5rem}
 }
+
+/* ===== 7. kör: a fonal mint mérce, egyezés-pillanat, üzenetek ===== */
+.fonal{display:inline-flex;align-items:center;gap:6px;color:var(--red2);font-size:.92rem;font-weight:600;white-space:nowrap}
+.fonal b{font-weight:700}
+.szal{width:44px;height:12px;flex:none;overflow:visible}
+.fonal.eros .szal{filter:drop-shadow(0 0 5px #FF2D55)}
+.sw .fonal{color:#FF8A9C;font-size:inherit}
+.sw .tags span.k{background:#E0314F;border-color:#E0314F;color:#fff}
+.sw .szalak{color:#F2C46B}
+.sw .gond{color:#FFB3BE}
+.sw .fate{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:2;white-space:nowrap;background:linear-gradient(135deg,#FFE9A8,#D4B16A);color:#1a0a0e;border-radius:999px;padding:4px 16px;font-size:.88rem;font-weight:600;box-shadow:0 0 0 3px rgba(255,196,0,.25),0 0 22px rgba(255,196,0,.5)}
+.person .fonal{font-size:.88rem}
+.tags.k{justify-content:center;margin-top:14px}
+.tags.k span{color:var(--ink);border-color:var(--red2);background:color-mix(in srgb,var(--red2) 16%,transparent)}
+.hint{margin:4px 0 0;font-size:.95rem;text-align:center}
+.linkish{background:none;border:0;padding:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
+/* egyezés és bemutatkozás: a fonal kirajzolódik a két profil között */
+.overlay .mbox{max-width:560px}
+.overlay p{max-width:46ch;margin:10px auto 0}
+.overlay .mbtn{margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.overlay .linkish{color:var(--muted);margin-top:10px}
+.pair{display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.mav{width:96px;height:96px;border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;font:700 3rem var(--head);color:#fff;border:3px solid var(--red2);box-shadow:0 0 30px rgba(224,49,79,.45);animation:pop .5s cubic-bezier(.2,1.5,.4,1) both;position:relative;z-index:1}
+.mav:last-child{animation-delay:1.25s}
+.mav img{width:100%;height:100%;object-fit:cover}
+.mthread{width:min(240px,40vw);height:auto;margin:0 -10px;overflow:visible}
+.mthread.solo{display:block;margin:0 auto 6px;width:200px}
+.mthread path{fill:none;stroke:#FF2D55;stroke-width:5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 6px #FF2D55);animation:draw 1.3s .25s cubic-bezier(.6,0,.3,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{transform:scale(0)}}
+@media(prefers-reduced-motion:reduce){.mthread path{animation:none;stroke-dashoffset:0}.mav{animation:none}}
+:root[data-theme=light] .overlay{background:rgba(246,237,233,.94)}
+:root[data-theme=light] .mav{border-color:#1A0A0E;box-shadow:4px 4px 0 #1A0A0E}
+:root[data-theme=light] .mthread path{stroke:#E0143C;filter:none}
+/* üzenetek */
+.chat{display:grid;grid-template-columns:300px 1fr;gap:20px;height:calc(100vh - 190px);min-height:480px;margin:20px 0 10px}
+.clist,.cpane{background:var(--panel);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 34px 60px -26px rgba(0,0,0,.75),0 0 0 1px var(--line)}
+.clist{padding:18px 12px;overflow:auto}
+.clist h1{font-size:1.8rem;margin:0 8px 12px}
+.clist>div>p{padding:0 8px}
+.citem{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-radius:16px;padding:10px;color:var(--ink);font:inherit;cursor:pointer}
+.citem:hover,.citem.on{background:color-mix(in srgb,var(--red2) 15%,transparent)}
+.ctext{flex:1;min-width:0}
+.ctext small{display:block;color:var(--muted);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.citem .dot{padding:0 6px}
+.cav{width:48px;height:48px;border-radius:50%;flex:none;display:grid;place-items:center;font:700 1.5rem var(--head);color:#fff}
+.cpane{display:flex;flex-direction:column;padding:0}
+.cnone{margin:auto;padding:24px;text-align:center}
+.chead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.chead small{display:block;color:var(--muted);font-size:.88rem}
+.chead>div{min-width:0}
+.chead b,.chead small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chead .fonal{margin-left:auto}
+.back{display:none;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);font-size:1.2rem;cursor:pointer}
+.tags.k.cthreads{justify-content:flex-start;margin:0;padding:12px 18px 0}
+.crandi{padding:8px 18px 0;font-size:.9rem;color:var(--muted)}
+.msgs{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:8px}
+.cempty{text-align:center;margin:auto 0 8px}
+.bub{max-width:75%;padding:10px 14px;border-radius:18px 18px 18px 4px;background:var(--bg);border:1px solid var(--line);align-self:flex-start;line-height:1.45}
+.bub.en{align-self:flex-end;border-radius:18px 18px 4px 18px;background:linear-gradient(135deg,var(--red),var(--deep));color:#fff;border-color:transparent}
+.typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.25}}
+.ice{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 4px}
+.ice .chip{white-space:normal;text-align:left;font-weight:400;color:var(--ink)}
+.cform{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+.cform input{flex:1;border-radius:999px}
+.chatnote{font-size:.85rem;margin-bottom:8px}
+:root[data-theme=light] .clist,:root[data-theme=light] .cpane{border:2px solid #1A0A0E;box-shadow:7px 7px 0 var(--red)}
+:root[data-theme=light] .bub{background:#fff;border-color:#1A0A0E}
+:root[data-theme=light] .bub.en{border-color:#1A0A0E;background:var(--red);color:#fff}
+@media(max-width:700px){
+ .chat{grid-template-columns:1fr;height:auto;min-height:0;margin-top:8px}
+ .chat .cpane{display:none}
+ .chat.open .clist{display:none}
+ .chat.open .cpane{display:flex;height:calc(100svh - 140px)}
+ .back{display:grid}
+ .chead{padding:12px}
+ .chead .fonal span{display:none}
+ .mav{width:76px;height:76px;font-size:2.4rem}
+ .overlay h2{font-size:2.6rem}
+}

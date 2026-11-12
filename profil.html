@@ -11,6 +11,7 @@
 <h1>Profilod <span class="badge" id="pb" hidden>Prémium</span></h1>
 <p class="muted">Mesélj magadról mindent, amit szeretnél. Mindent átlátsz, semmi sem kötelező.</p>
 <div class="pbar"><i id="bar"></i></div><p class="muted" id="pct" style="font-size:.9rem"></p>
+<p class="muted" style="font-size:.9rem;margin-top:6px">A vörös fonal ebből dolgozik: minél több kérdésre válaszolsz, annál pontosabban mutatja meg, ki illik hozzád. Amit kizáró oknak írsz (például dohányzás), arra figyelmeztet.</p>
 <div id="form"></div>
 <div class="savebar"><button class="btn" id="save">Mentés</button><span class="msg" id="msg" role="status" style="margin:0"></span></div>
 <p class="muted" style="margin-top:12px">A profil most a saját böngésződben tárolódik, nem küldjük el sehova. A beállításokat (téma, hang, szűrők) a Beállítások oldalon találod.</p>
@@ -20,7 +21,7 @@ const HOBBIK=['utazás','zene','sport','film','főzés','természet','könyvek',
 const ZENE=['pop','rock','hip-hop','elektronikus','jazz','klasszikus','népzene','metál','blues','country','reggae','R&B','indie','latin'];
 const SEC=[
 ['Alapok',[['nev','Becenév','t'],['kor','Korod','n'],['nem','Nem','s',['Nő','Férfi','Nem bináris','Egyéb']],['varos','Város','t'],['magassag','Magasság (cm)','n'],['csillagjegy','Csillagjegy','s',['Kos','Bika','Ikrek','Rák','Oroszlán','Szűz','Mérleg','Skorpió','Nyilas','Bak','Vízöntő','Halak']],['nyelvek','Beszélt nyelvek','c',['magyar','román','angol','német','francia','spanyol','olasz','orosz']]]],
-['Mit keresek',[['keresem','Mit keresel?','s',['Komoly kapcsolatot','Ismerkedést','Barátságot','Még nem tudom']],['kit','Kit szeretnél megismerni?','s',['Nőket','Férfiakat','Mindenkit']],['tulaj','Mi a fontos a másikban?','c',['humor','őszinteség','kedvesség','ambíció','nyugalom','kalandvágy','családszeretet','műveltség','sportosság','kreativitás','megbízhatóság','önállóság']],['kizaro','Ami nálam kizáró ok','a']]],
+['Mit keresek',[['keresem','Mit keresel?','s',['Komoly kapcsolatot','Ismerkedést','Barátságot','Még nem tudom']],['kit','Kit szeretnél megismerni?','s',['Nőket','Férfiakat','Mindenkit']],['tulaj','Mi a fontos a másikban?','c',['humor','őszinteség','kedvesség','ambíció','nyugalom','kalandvágy','családszeretet','műveltség','sportosság','kreativitás','megbízhatóság','önállóság']],['kizaro','Ami nálam kizáró ok','a',null,'Például: dohányzás, sok buli. A fonal figyelmeztet rá.']]],
 ['Munka és tanulás',[['foglalkozas','Foglalkozás','t'],['munkahely','Hol dolgozol vagy tanulsz?','t'],['vegzettseg','Végzettség','s',['Általános iskola','Középiskola','Szakképzés','Egyetem (alapképzés)','Mesterképzés','Doktori','Egyéb']]]],
 ['Életmód',[['dohany','Dohányzás','s',['Nem dohányzom','Alkalmanként','Rendszeresen']],['alkohol','Alkohol','s',['Nem iszom','Ritkán','Társaságban','Gyakran']],['edzes','Mozgás','s',['Ritkán','Hetente 1-2 alkalom','Hetente 3 vagy több','Naponta']],['alvas','Alvás','s',['Korán kelő','Éjszakai bagoly','Vegyes']],['gyerek','Gyerekek','s',['Nincs és nem is akarok','Nincs, de szeretnék','Van','Van és még szeretnék','Nyitott vagyok rá']],['lakas','Lakhatás','s',['Egyedül lakom','Szülőkkel','Lakótársakkal','Saját otthonban']],['jarmu','Közlekedés','s',['Autó','Kerékpár','Tömegközlekedés','Mindegyik']],['vallas','Vallás (nem kötelező)','s',['Nem vagyok vallásos','Keresztény','Más vallású','Spirituális','Inkább nem mondom meg']],['kisallat','Háziállat','c',['kutya','macska','nyúl','madár','nincs, de szeretnék','nincs']]]],
 ['Evés és ivás',[['etrend','Étrend','s',['Mindenevő','Vegetáriánus','Vegán','Pescetáriánus','Egyéb']],['foz','Főzés','s',['Nem főzök','Egyszerű ételeket','Szeretek főzni','Profi vagyok']],['kedvenc_etel','Kedvenc étel','t'],['edesseg','Kedvenc édesség','t'],['konyha','Kedvenc konyhák','c',['magyar','olasz','ázsiai','mexikói','indiai','görög','török','grill','tengeri']],['ital','Kedvenc italok','c',['kávé','tea','bor','sör','koktél','limonádé','víz','pálinka']]]],
@@ -29,11 +30,11 @@ const SEC=[
 ['Rólad bővebben',[['bio','Pár mondat rólad','a'],['erdekesseg','Egy dolog, amit kevesen tudnak rólam','t'],['vasarnap','A tökéletes vasárnapom','a'],['elsorandi','Az ideális első randim','a'],['alom','Hol látod magad öt év múlva?','a']]]];
 const el=id=>document.getElementById(id),p=load('sf_profile',{});
 const ALL=SEC.flatMap(s=>s[1]);
-el('form').innerHTML=SEC.map(([t,fs])=>'<h2 class="sec">'+t+'</h2><div class="fields">'+fs.map(([k,l,ty,o])=>{
+el('form').innerHTML=SEC.map(([t,fs])=>'<h2 class="sec">'+t+'</h2><div class="fields">'+fs.map(([k,l,ty,o,ph])=>{
  const v=p[k];let h;
  if(ty==='t')h='<input id="f_'+k+'" value="'+esc(v||'')+'">';
  else if(ty==='n')h='<input id="f_'+k+'" type="number" value="'+esc(v||'')+'">';
- else if(ty==='a')h='<textarea id="f_'+k+'">'+esc(v||'')+'</textarea>';
+ else if(ty==='a')h='<textarea id="f_'+k+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>'+esc(v||'')+'</textarea>';
  else if(ty==='s')h='<select id="f_'+k+'"><option value="">–</option>'+o.map(x=>'<option'+(v===x?' selected':'')+'>'+x+'</option>').join('')+'</select>';
  else h='<div class="checks" id="f_'+k+'">'+o.map(x=>'<label><input type="checkbox" value="'+x+'"'+((v||[]).includes(x)?' checked':'')+'>'+x+'</label>').join('')+'</div>';
  const full=ty==='c'||ty==='a';

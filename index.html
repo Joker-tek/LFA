@@ -7,6 +7,7 @@
 <header><a class="logo" href="index.html">Sors<i>fonál</i></a><nav></nav></header>
 <main class="main1">
 <p class="muted" id="left" style="margin:0"></p>
+<p class="muted hint" id="hint" hidden><a href="profil.html">Töltsd ki a profilod</a>, és a fonal megmutatja, ki illik hozzád. Vagy <button class="linkish" id="minta1">próbáld ki minta profillal</button>.</p>
 <div class="deck" id="deck"></div>
 <div class="vote"><button class="big" id="no" data-fx="1" aria-label="Nem">✕</button><button class="big yes" id="yes" data-fx="1" aria-label="Igen">♥</button></div>
 <p class="sub muted" style="font-size:.9rem;margin:0">Húzd a képet, vagy használd a ← és → billentyűt.</p>
@@ -17,13 +18,27 @@
 </div>
 <script>
 const el=id=>document.getElementById(id);
-const S=SET(),me=load('sf_profile',{}),mine=(me.hobbik||[]).concat(me.zene||[]);
-const deck=PEOPLE.filter(p=>p[1]>=(S.min||18)&&p[1]<=(S.max||99)&&p[2]<=(S.km||100)&&(!S.show||S.show==='all'||p[8]===S.show)&&!liked().includes(p[0])&&!passed().includes(p[0]));
+const S=SET(),me=sajat(),mine=(me.hobbik||[]).concat(me.zene||[]);
+const show=S.show||({'Nőket':'f','Férfiakat':'m'}[me.kit])||'all';   // ha a beállításokban nincs szűrő, a profilod „Kit szeretnél megismerni?” mezője dönt
+const vanFonal=fonal(PEOPLE[0],me).pct!=null;
+const deck=PEOPLE.filter(p=>p.kor>=(S.min||18)&&p.kor<=(S.max||99)&&p.km<=(S.km||100)&&(show==='all'||p.nem===show)&&!liked().includes(p.nev)&&!passed().includes(p.nev))
+ .map(p=>({p,f:fonal(p,me)}));
+if(vanFonal)deck.sort((a,b)=>b.f.pct-a.f.pct);   // a fonal a legerősebb szálakat hozza előre
+/* a nap fonala: a legerősebb szál, amiről még nem döntöttél; egy napig ugyanaz marad */
+function napiFonal(){const d=load('sf_napi',{});if(d.day===today())return d.nev;
+ const best=vanFonal&&deck[0];if(best)save('sf_napi',{day:today(),nev:best.p.nev});return best?best.p.nev:null}
+const napi=napiFonal(),nk=deck.findIndex(d=>d.p.nev===napi);if(nk>0)deck.unshift(deck.splice(nk,1)[0]);
 let i=0;
 function left(){el('left').innerHTML=prem()?'Korlátlan lájk <span class="badge">Prémium</span>':'Mára még '+(cap()-used())+' lájkod van. <a href="premium.html">Több kell?</a>'}
-function cardHtml(p){
- const common=p[4].concat(p[5]).filter(x=>mine.includes(x));
- return '<div class="stamp y">IGEN</div><div class="stamp n">NEM</div><div class="pic" style="background:linear-gradient(160deg,'+p[6]+',#0D0406)">'+p[0][0]+'</div><div class="info"><h2>'+p[0]+', '+p[1]+'</h2><div class="row2">'+p[10]+' · '+(S.hideDist?'':p[2]+' km · ')+(common.length?common.length+' közös érdeklődés':'új ismerős')+'</div><p style="font-size:.95rem">'+p[3]+'</p><div class="tags" style="margin-top:8px">'+p[4].map(x=>'<span>'+x+'</span>').join('')+p[5].map(x=>'<span>♪ '+x+'</span>').join('')+'</div><div class="row2" style="margin-top:8px">Kedvenc étel: '+p[9]+'</div></div>';
+function cardHtml(d){
+ const p=d.p,f=d.f,common=p.hobbik.concat(p.zene).filter(x=>mine.includes(x));
+ const tag=(x,t)=>'<span'+(mine.includes(x)?' class="k"':'')+'>'+t+'</span>';
+ const tobb=f.sz.filter(x=>!common.includes(x.replace('♪ ','')));   // a címkéken túli közös szálak
+ const also=f.tilt.length?'<div class="row2 gond">⚠ Kizáró okod: '+f.tilt.join(', ')+'</div>'
+  :f.gond.length?'<div class="row2 gond">⚠ '+f.gond.join(' · ')+'</div>'
+  :tobb.length?'<div class="row2 szalak">Közös szál: '+tobb.slice(0,3).join(' · ')+'</div>'
+  :'<div class="row2" style="margin-top:8px">Kedvenc étel: '+p.kedvenc_etel+'</div>';
+ return '<div class="stamp y">IGEN</div><div class="stamp n">NEM</div>'+(p.nev===napi?'<div class="fate">✦ A nap fonala</div>':'')+'<div class="pic" style="background:linear-gradient(160deg,'+p.szin+',#0D0406)">'+p.nev[0]+'</div><div class="info"><h2>'+p.nev+', '+p.kor+'</h2><div class="row2">'+p.foglalkozas+' · '+(S.hideDist?'':p.km+' km · ')+(f.pct!=null?fonalJel(f):common.length?common.length+' közös érdeklődés':'új ismerős')+'</div><p style="font-size:.95rem">'+p.bio+'</p><div class="tags" style="margin-top:8px">'+p.hobbik.map(x=>tag(x,x)).join('')+p.zene.map(x=>tag(x,'♪ '+x)).join('')+'</div>'+also+'</div>';
 }
 function render(){
  left();const d=el('deck');d.innerHTML='';
@@ -32,14 +47,14 @@ function render(){
  const c=document.createElement('div');c.className='sw';c.innerHTML=cardHtml(deck[i]);d.appendChild(c);drag(c);
 }
 function decide(yes){
- const c=document.querySelector('.sw:not(.back)');if(!c)return;
+ const c=document.querySelector('.sw:not(.back)');if(!c||document.querySelector('.overlay'))return;
  el('note').textContent='';
  if(yes&&used()>=cap()){el('note').innerHTML='Elfogyott a mai lájkod. A Prémiummal korlátlan lájkod lesz. <a href="premium.html">Megnézem</a>';c.style.transform='';return}
- const p=deck[i],r=c.getBoundingClientRect();
+ const p=deck[i].p,r=c.getBoundingClientRect();
  yes?addLike(p):addPass(p);
  sfx(yes?'yes':'no');burst(r.left+r.width/2,r.top+r.height/2,yes?'yes':'no');
  c.style.transform='translateX('+(yes?'140%':'-140%')+') rotate('+(yes?18:-18)+'deg)';c.style.opacity=0;
- setTimeout(()=>{i++;render();if(yes&&p[7])match(p)},300);
+ setTimeout(()=>{i++;render();if(yes&&p.lajkolt)match(p)},300);
 }
 function drag(c){let x0=null,dx=0;
  const yS=c.querySelector('.y'),nS=c.querySelector('.n');
@@ -49,5 +64,14 @@ function drag(c){let x0=null,dx=0;
 }
 el('yes').onclick=()=>decide(true);el('no').onclick=()=>decide(false);
 document.onkeydown=e=>{if(e.key==='ArrowRight')decide(true);if(e.key==='ArrowLeft')decide(false)};
+function minta(){mintaProfil();save('sf_intro',true);location.reload()}
+el('hint').hidden=vanFonal;el('minta1').onclick=minta;
+/* első látogatás: a vörös fonal legendája */
+if(!vanFonal&&!load('sf_intro',false)){
+ const o=document.createElement('div');o.className='overlay';o.setAttribute('role','dialog');o.setAttribute('aria-label','A vörös fonal legendája');
+ o.innerHTML='<div class="mbox"><svg class="mthread solo" viewBox="0 0 240 90" aria-hidden="true"><path pathLength="1" d="'+SZAL_UT+'"/></svg><h2>A vörös fonal legendája</h2><p>Egy régi kelet-ázsiai legenda szerint láthatatlan vörös fonal köti össze azokat, akiknek találkozniuk kell. A fonal megnyúlhat, összegubancolódhat, de sosem szakad el.</p><p class="muted">A Sorsfonál ezt a szálat keresi: minél többet mesélsz magadról, annál pontosabban mutatja meg, kihez vezet a te fonalad.</p><p class="mbtn"><a class="btn" data-fx="1" href="profil.html">Kitöltöm a profilom</a> <button class="btn ghost" data-fx="1" id="minta2">Kipróbálom minta profillal</button></p><p><button class="linkish" id="skip">Csak nézelődöm</button></p></div>';
+ document.body.appendChild(o);save('sf_intro',true);
+ el('minta2').onclick=minta;el('skip').onclick=()=>o.remove();
+}
 render();
 </script></body></html>
