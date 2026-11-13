@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="Sorsfonál – a vörös fonal már kötődik hozzád">
+  <defs>
+    <radialGradient id="glow" cx="80%" cy="0%" r="75%">
+      <stop offset="0" stop-color="#3A0A16"/>
+      <stop offset="1" stop-color="#0D0406" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="thread" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#6E0B1D"/>
+      <stop offset=".5" stop-color="#E0314F"/>
+      <stop offset="1" stop-color="#6E0B1D"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" rx="24" fill="#0D0406"/>
+  <rect width="1200" height="300" rx="24" fill="url(#glow)"/>
+  <path d="M-10 236 C 150 130, 260 300, 420 228 S 580 160, 630 212 C 664 248, 606 264, 610 228 C 614 192, 690 186, 724 220 S 900 292, 1060 212 S 1180 166, 1210 180"
+        fill="none" stroke="url(#thread)" stroke-width="4" stroke-linecap="round"/>
+  <text x="600" y="122" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, 'Times New Roman', serif" font-size="88" font-weight="700" fill="#F5E9E6">Sors<tspan fill="#E0314F">fonál</tspan></text>
+  <text x="600" y="168" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="28" fill="#D4B16A">a vörös fonal már kötődik hozzád</text>
+</svg>

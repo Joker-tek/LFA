@@ -1,0 +1,33 @@
+name: 🐛 Bug report
+description: Something doesn't work the way it should
+labels: [bug]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Which page did it happen on?
+      placeholder: index.html
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+      placeholder: |
+        1. Clicked „Kipróbálom minta profillal”
+        2. Liked Anna
+        3. Expected the match screen, but nothing happened
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Chrome 131 on Windows 11 / Safari on iPhone
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshot or console errors
+      description: Paste any red errors from the browser console (F12), or drop a screenshot here.

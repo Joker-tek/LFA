@@ -1,0 +1,29 @@
+name: 🧵 Feature idea
+description: Suggest something new for Sorsfonál
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should Sorsfonál do, and why would it make the app better?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Discover / cards
+        - Red thread matching
+        - Messages
+        - Profile
+        - Settings
+        - Premium
+        - Design / look and feel
+        - Other
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Sketches, examples from other apps, open questions.
